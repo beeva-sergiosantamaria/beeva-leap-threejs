@@ -28,16 +28,18 @@ angular.module('pruebaApp')
 
     var radius = 100, theta = 0;
 
+    var colores = [0x0040FF,0xFF4000,0xfca000,0xDF0174,0x3ADF00];//azul, rojo, amarillo
+
     init();
     animate();
 
     function init() {
-      var colores = [0x0040FF,0xFF4000,0xfca000,0xDF0174,0x3ADF00];//azul, rojo, amarillo
+
 
       //-------------------  CAMARA  -------------------
 
-      camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000); //angulo, proporcion ancho/alto, campo cercano, campo lejano.
-      camera.position.z = 400;
+      camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 1, 10000); //angulo, proporcion ancho/alto, campo cercano, campo lejano.
+      camera.position.z = 100;
 
       //------------------- CONTROLES -------------------
 
@@ -70,7 +72,7 @@ angular.module('pruebaApp')
 
       //------------------- TEXTURA -------------------
 
-      //var material = new THREE.MeshLambertMaterial( { color:0xfca000 } ); //material sin textura
+      var material = new THREE.MeshLambertMaterial( { color:0x04B486 } ); //material sin textura
       //var Textura = new THREE.ImageUtils.loadTexture("textures/brick_bump.jpg"); //carga de textura
       //var material = new THREE.MeshBasicMaterial({ map:Textura, side:THREE.DoubleSide });
       //var material = new THREE.MeshLambertMaterial({ map:Textura, side:THREE.DoubleSide }); //aplicacion de textura como material
@@ -82,13 +84,23 @@ angular.module('pruebaApp')
 
       //------------------- ELEMENTOS -------------------
 
+      for( var i = 0; i < 1000; i ++ ) {
+        var bolitas = new THREE.SphereGeometry(1, 10, 10);
+        var materialbolitas = new THREE.MeshBasicMaterial({color: 0xffffff});
+        var esfera = new THREE.Mesh(bolitas, materialbolitas);
+        esfera.position.x = ( Math.random() - 0.5 ) * 1000;
+        esfera.position.y = ( Math.random() - 0.5 ) * 1000;
+        esfera.position.z = ( Math.random() - 0.5 ) * 1000;
+        scene.add(esfera);
+      }
+
       for ( var e = 0; e < 16; e ++ ) {
 
-          var phi = (e*0.385)+50 + Math.PI; //calcular valor de PI para la circunferencia.
-          var rand = colores[Math.floor(Math.random() * colores.length)];//seleccion color aleatoriamente
-          var material = new THREE.MeshLambertMaterial( { color:rand} ); //material sin textura
+          var phi = (e*0.39)+50 + Math.PI; //calcular valor de PI para la circunferencia.
+          //var rand = colores[Math.floor(Math.random() * colores.length)];//seleccion color aleatoriamente
+          //var material = new THREE.MeshLambertMaterial( { color:rand} ); //material sin textura
           material.transparent = true;
-          material.opacity = 0.5;
+          material.opacity = 0.3;
 
           //-------------------  ESTABLECE LA MALLA PARA LOS PARAMETROS DE GEOMETRIA Y MATERIAL -------------------
 
@@ -103,7 +115,7 @@ angular.module('pruebaApp')
 
           //------------------- PATRON DE ROTACION DEL ELEMENTO -------------------
 
-          //mesh.rotation.y = (0.24*e);
+          mesh.rotation.y = (0.36*e);
 
           //------------------- PATRON DE ESCALADO DEL ELEMENTO -------------------
 
@@ -119,8 +131,8 @@ angular.module('pruebaApp')
       // ------------------- RENDERIZADO DE ESCENA CON PARAMETROS DE COLOR DE FONDO Y TAMAÑO -------------------
 
       container = document.getElementById( 'container' );
-      renderer = new THREE.WebGLRenderer( { antialias: false } );
-      renderer.setClearColor( 0x585858 );
+      renderer = new THREE.WebGLRenderer( { antialias: true } );
+      renderer.setClearColor( 0x000000 );
       //renderer.setClearColor( scene.fog.color, 1 );//añadir efecto niebla
       renderer.setSize( window.innerWidth, window.innerHeight );
       renderer.sortObjects = false;

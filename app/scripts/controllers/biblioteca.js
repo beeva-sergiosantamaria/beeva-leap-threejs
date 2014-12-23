@@ -106,6 +106,17 @@ angular.module('pruebaApp')
 
       //------------------- FOR PARA CREAR TANTOS ELEMENTOS COMO SE QUIERA -------------------
 
+      //for( var i = 0; i < 10000; i ++ ) {
+      //  var bolitas = new THREE.SphereGeometry(5, 32, 32);
+      //  var materialbolitas = new THREE.MeshBasicMaterial({color: 0xffffff});
+      //  var esfera = new THREE.Mesh(bolitas, materialbolitas);
+      //  esfera.position.x = ( Math.random() - 0.5 ) * 100;
+      //  esfera.position.y = ( Math.random() - 0.5 ) * 100;
+      //  esfera.position.z = ( Math.random() - 0.5 ) * 100;
+      //  scene.add(esfera);
+      //}
+
+
       for ( var e = 0; e < 16; e ++ ) { //filas
         //for ( var i = 0; i < 5; i ++ ) {//columnas
         var rand = colores[Math.floor(Math.random() * colores.length)];//seleccion color aleatoriamente
