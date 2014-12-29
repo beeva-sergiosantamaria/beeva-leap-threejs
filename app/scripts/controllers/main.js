@@ -19,13 +19,29 @@ angular.module('pruebaApp')
 
 
     var container, container2,  stats, controls, controller;
-    var camera, scene, raycaster, renderer;
+    var camera, scene, raycaster, renderer, effect;
+
 
     var mouse = new THREE.Vector2(), INTERSECTED;
     //var radius = 100, theta = 0;
-
+    //toggleFullScreen();
     init();
     animate();
+
+    function toggleFullScreen() {
+      var doc = window.document;
+      var docEl = doc.documentElement;
+
+      var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+      var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+      if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        requestFullScreen.call(docEl);
+      }
+      else {
+        cancelFullScreen.call(doc);
+      }
+    }
 
     function init() {
 
@@ -131,6 +147,10 @@ angular.module('pruebaApp')
       //renderer.setClearColor( scene.fog.color, 1 );//añadir efecto niebla
       renderer.setSize( window.innerWidth, window.innerHeight );
       renderer.sortObjects = false;
+
+      effect = new THREE.StereoEffect(renderer);
+      effect.setSize( window.innerWidth, window.innerHeight );
+
       container.appendChild(renderer.domElement);
 
       controller.connect();
@@ -145,6 +165,10 @@ angular.module('pruebaApp')
 
       window.addEventListener( 'resize', onWindowResize, false );
 
+      camera.position.z = 0;
+      camera.position.x = 0;
+      camera.position.y = 0;
+
     }
 
     function onWindowResize() {
@@ -153,6 +177,7 @@ angular.module('pruebaApp')
       camera.updateProjectionMatrix();
 
       renderer.setSize( window.innerWidth, window.innerHeight );
+      effect.setSize( window.innerWidth, window.innerHeight );
 
     }
 
@@ -214,7 +239,7 @@ angular.module('pruebaApp')
 
       }*/
 
-      renderer.render( scene, camera );
+      effect.render( scene, camera );
 
     }
 

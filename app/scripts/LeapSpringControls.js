@@ -175,13 +175,11 @@ THREE.LeapSpringControls = function ( object , controller , scene , domElement )
       }
 
     }
-    console.log("New Frame", this.frame )
     this.oFrame = this.frame;
 
   }
 
   this.update = function(){
-    console.log("Update");
     // Just incase this is overwritten somewhere else in the code
     this.object.matrixAutoUpdate = true;
 
@@ -211,7 +209,7 @@ THREE.LeapSpringControls = function ( object , controller , scene , domElement )
     f.x = f.x / 10;
     f.y = f.y / 10;
     f.z = f.z / 10;
-    this.applyForce( f );
+    //this.applyForce( f );
 
     // Makes sure that we are always looking at the 
     // anchor position
