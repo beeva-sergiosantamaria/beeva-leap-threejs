@@ -38,7 +38,7 @@
 
     this.rotatingObject.add( this.rotatingCamera );
 
-    this.zoomSpeed                = 0;
+    this.zoomSpeed                = 10;
 
 
     //API
@@ -55,7 +55,7 @@
     this.zoomSpeedRatio           = 10;
 
     this.minZoom                  = 20;
-    this.maxZoom                  = 80;
+    this.maxZoom                  = 800;
 
     this.rotation = new THREE.Quaternion();
     this.angularVelocity = new THREE.Vector3();

@@ -46,18 +46,7 @@ angular.module('pruebaApp')
       //camera.setLens(70);
 
       //controls = new THREE.LeapPaddleControls( camera , controller );
-      scene = new THREE.Scene();
 
-      controls = new THREE.LeapSpringControls( camera , controller, scene );
-      controls.rotationSpeed            = 10;
-      controls.rotationDampening        = .98;
-      controls.zoom                     = 40;
-      controls.zoomDampening            = .6;
-      controls.zoomCutoff               = .9;
-      controls.zoomEnabled              = true;
-
-      controls.minZoom                  = 20;
-      controls.maxZoom                  = 80;
 
       //controls = new THREE.TrackballControls( camera );
       //controls.rotateSpeed = 1.0;
@@ -68,19 +57,19 @@ angular.module('pruebaApp')
       //controls.staticMoving = true;
       //controls.dynamicDampingFactor = 0.3;
 
+      scene = new THREE.Scene();
+
+
+      controls = new THREE.LeapSpringControls( camera , controller, scene);
+
+      controls.dampening      = .75;
+      controls.size           = 120;
+      controls.springConstant =   1;
+      controls.mass           = 100;
+      controls.anchorSpeed    =  .1;
+      controls.staticLength   = 100;
 
       //scene.fog = new THREE.FogExp2( 0x767676, 0.002 );
-
-      var geo = new THREE.IcosahedronGeometry( 5, 2 );
-      var mat = new THREE.MeshNormalMaterial();
-
-      var targetMesh  = new THREE.Mesh( geo , mat );
-      var anchorMesh  = new THREE.Mesh( geo , mat );
-      var handMesh    = new THREE.Mesh( geo , mat );
-
-      //controls.addTargetMarker( targetMesh );
-      //controls.addAnchorMarker( anchorMesh );
-      controls.addHandMarker(     handMesh );
 
       var light = new THREE.DirectionalLight( 0xffffff );
       light.position.set( 1, 1, 1 );
@@ -145,6 +134,10 @@ angular.module('pruebaApp')
 
       window.addEventListener( 'resize', onWindowResize, false );
 
+
+
+
+
     }
 
     function onWindowResize() {
@@ -188,7 +181,7 @@ angular.module('pruebaApp')
 
       // find intersections
 
-      /*var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ).unproject( camera );
+      var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ).unproject( camera );
 
       raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
 
@@ -212,7 +205,7 @@ angular.module('pruebaApp')
 
         INTERSECTED = null;
 
-      }*/
+      }
 
       renderer.render( scene, camera );
 
