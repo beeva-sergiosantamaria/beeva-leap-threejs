@@ -12,7 +12,7 @@ angular.module('pruebaApp')
 
     var objects = [];
     var targets = { grupo: [], esfera: [], helice: [], capa: [] };
-
+    var buttons = [];
     init();
 
     var leapController = new Leap.Controller({optimizeHMD: false});
@@ -25,7 +25,11 @@ angular.module('pruebaApp')
       TWEEN.update();
       render();
     }, 40);
-
+    buttons.push($("#grupos"));
+    buttons.push($("#capas"));
+    buttons.push($("#esferas"));
+    buttons.push($("#helices"));
+    buttons.push($("#fullscreen"));
     /*
      Leap.loop(function(frame){
 
@@ -45,7 +49,7 @@ angular.module('pruebaApp')
 
       cameraControls = new THREE.LeapCameraControls(camera);
       cameraControls.rotateEnabled  = true;
-      cameraControls.rotateSpeed    = 1;
+      cameraControls.rotateSpeed    = 3;
       cameraControls.rotateHands    = 1;
       cameraControls.rotateFingers  = [2, 3];
 
@@ -54,9 +58,9 @@ angular.module('pruebaApp')
       cameraControls.zoomHands      = 1;
       cameraControls.zoomFingers    = [3, 4];
 
-      cameraControls.panEnabled     = true;
+      //cameraControls.panEnabled     = true;
       cameraControls.zoomStabilized    = true;
-      cameraControls.panSpeed       = 1;
+      cameraControls.panSpeed       = 3;
       cameraControls.panHands       = 1;
       cameraControls.panFingers     = [5, 5];
       cameraControls.panRightHanded = false;
@@ -78,17 +82,10 @@ angular.module('pruebaApp')
       geometry = new THREE.OctahedronGeometry( 60000,6 );
 
       var Textura = new THREE.ImageUtils.loadTexture("textures/text3.jpg"); //carga de textura
-      var material = new THREE.MeshLambertMaterial({ side:THREE.DoubleSide }); //aplicacion de textura como material
+      material = new THREE.MeshLambertMaterial({ map:Textura, side:THREE.DoubleSide }); //aplicacion de textura como material
       //material = new THREE.MeshLambertMaterial( { color: 0xAEB404 } );
-
-      //var imageCanvas2 = document.createElement("canvas");
-      //canvg(imageCanvas2, 'images/46.svg');
-      //
-      //var texture = new THREE.Texture(imageCanvas2);
-      //texture.needsUpdate = true;
-
       material.transparent = true;
-      material.opacity = 0.2;
+      material.opacity = 0.5;
 
       cubo = new THREE.Mesh( geometry,material );
       vectorcubo = new THREE.Vector3();
@@ -107,7 +104,7 @@ angular.module('pruebaApp')
       //object.updateMatrix();
       //object.matrixAutoUpdate = false;
 
-      //scene.add( cubo );
+      scene.add( cubo );
 
       // grupos
       for ( var i = 0; i < 12; i ++ ) {
@@ -321,24 +318,7 @@ angular.module('pruebaApp')
 
       var button = document.getElementById( 'fullscreen' );
       button.addEventListener( 'click', function ( event ) {
-        if ((document.fullScreenElement && document.fullScreenElement !== null) ||
-            (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-          if (document.documentElement.requestFullScreen) {
-            document.documentElement.requestFullScreen();
-          } else if (document.documentElement.mozRequestFullScreen) {
-            document.documentElement.mozRequestFullScreen();
-          } else if (document.documentElement.webkitRequestFullScreen) {
-            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-          }
-        } else {
-          if (document.cancelFullScreen) {
-            document.cancelFullScreen();
-          } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-          } else if (document.webkitCancelFullScreen) {
-            document.webkitCancelFullScreen();
-          }
-        }
+        toggleFullscreen();
       }, false );
 
       transformar( targets.helice, 2000 );
@@ -485,6 +465,7 @@ angular.module('pruebaApp')
         var cont = $(renderer.domElement);
         var offset = cont.offset();
         var coords = transform(f.tipPosition, cont.width(), cont.height());
+        intersections(frame, coords);
         $("#cursor").css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
         $("#cursor").css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
       } else {
@@ -492,4 +473,51 @@ angular.module('pruebaApp')
         $("#cursor").css('top', -1000);
       };
     }
+
+    function toggleFullscreen(){
+      if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+          (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+        if (document.documentElement.requestFullScreen) {
+          document.documentElement.requestFullScreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+          document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullScreen) {
+          document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+      } else {
+        if (document.cancelFullScreen) {
+          document.cancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        }
+      }
+    }
+
+      var lastDivItems = 0;
+    function intersections(frame, coords) {
+      buttons.forEach(function(item) {
+        if (checkMouseCollision(coords[0], coords[1], item)) {
+          console.log(item);
+          lastDivItems++;
+          if(lastDivItems > 12)
+            item.trigger( "click" );
+        }
+
+      });
+    }
+
+    function checkMouseCollision(x, y, element) {
+      var objX = element.offset().left;
+      var objY = element.offset().top;
+      var objW = element.width();
+      var objH = element.height();
+
+
+      if(x > objX && x< (objX + objW) && (y >objY && y < (objY + objH)))
+        return true;
+      else return false;
+    }
+
   }]);
