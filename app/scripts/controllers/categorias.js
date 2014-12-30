@@ -26,7 +26,7 @@ angular.module('pruebaApp')
     scene = new THREE.Scene();
 
     // grupos
-    for ( var i = 0; i < categorias.length; i +=4 ) {
+    for ( var i = 0; i < categorias.length; i ++ ) {
       /*for (var e = 0; e < categorias[i].categories.length; e++) {*/
 
       var element = document.createElement('div');
@@ -34,12 +34,12 @@ angular.module('pruebaApp')
       element.style.backgroundColor = 'rgba(0,127,127,0.8'+/* + ( Math.random() * 0.5 + 0.25 ) + */')';
       var number = document.createElement('div');
       number.className = 'number';
-      number.textContent = categorias[i]._id;
+      //number.textContent = categorias[i]._id;
       element.appendChild(number);
 
       var symbol = document.createElement('div');
       symbol.className = 'symbol';
-      //symbol.textContent = categorias[i].categories[e].name;
+      symbol.textContent = categorias[i]._id;
       element.appendChild(symbol);
 
       var details = document.createElement('div');

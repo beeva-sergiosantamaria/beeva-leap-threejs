@@ -20,29 +20,144 @@ angular.module('pruebaApp')
       camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
       camera.position.z = 5000;
 
+      controls = new THREE.TrackballControls( camera );
+      controls.rotateSpeed = 1.0;
+      controls.zoomSpeed = 1.2;
+      controls.panSpeed = 0.8;
+      controls.noZoom = false;
+      controls.noPan = false;
+      controls.staticMoving = true;
+      controls.dynamicDampingFactor = 0.3;
+      ////controls.minDistance = 500;
+      ////controls.maxDistance = 6000;
+
       scene = new THREE.Scene();
 
+      var light = new THREE.DirectionalLight( 0xffffff );
+      light.position.set( 1, 1, 1 );
+      scene.add( light );
+
+      light = new THREE.DirectionalLight( 0x002288 );//azul
+      light.position.set( -1, -1, -1 );
+      scene.add( light );
+
+      light = new THREE.AmbientLight( 0x858586 );//gris oscuro
+      scene.add( light );
+
+      var geometry = new THREE.BoxGeometry( 3000,4000,500 );
+
+      var material = new THREE.MeshLambertMaterial( { color: 0x04B486 } );
+      material.transparent = true;
+      material.opacity = 0.2;
+
+      var object = new THREE.Mesh( geometry,material );
+      vector = new THREE.Vector3();
+
+      object.position.x = 110;
+      object.position.y = 0;
+      object.position.z = 110;
+
+      //object.rotation.y = (0.36*i);
+
+      vector.x = object.position.x * 2;
+      vector.y = object.position.y;
+      vector.z = object.position.z * 2;
+      object.lookAt(vector);
+
+      //object.updateMatrix();
+      //object.matrixAutoUpdate = false;
+
+      scene.add( object );
+
       // grupos
-      for ( var i = 0; i < CPS.length; i +=4 ) {
-        /*for (var e = 0; e < CPS[i].categories.length; e++) {*/
+      for ( var i = 0; i < CPS.length; i ++ ) {
+        var sumaIngresos = 0;
+        var sumaGastos = 0;
+        var totalTarjetas = 0;
+
+        for (var e = 0; e < CPS[i].categories.length; e++) {
+
+          sumaIngresos += CPS[i].categories[e].sum_incomes;
+          sumaGastos += CPS[i].categories[e].sum_num_payments;
+          totalTarjetas += CPS[i].categories[e].sum_num_cards;
+          }
 
           var element = document.createElement('div');
           element.className = 'element';
           element.style.backgroundColor = 'rgba(0,127,127,0.8'+/* + ( Math.random() * 0.5 + 0.25 ) + */')';
 
-          var number = document.createElement('div');
-          number.className = 'number';
-          //number.textContent = CPS[i]._id;
-          element.appendChild(number);
-
           var symbol = document.createElement('div');
           symbol.className = 'symbol';
-          symbol.textContent = CPS[i]._id;
+          symbol.textContent ='C.P.: '+CPS[i]._id;
           element.appendChild(symbol);
+
+          var grafico = document.createElement('div');
+            grafico.className = 'grafico';
+            element.appendChild(grafico);
+
+          var n = 3, // number of layers
+            m = CPS[i].categories.length, // number of samples per layer
+            stack = d3.layout.stack(),
+            layers = stack(d3.range(n).map(function() { return bumpLayer(m, .1); })),
+            yGroupMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y; }); }),
+            yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
+
+          var margin = {top: 150, right: 10, bottom: 20, left: 10},
+            width = 700 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+          var x = d3.scale.ordinal()
+            .domain(d3.range(m))
+            .rangeRoundBands([0, width], .08);
+
+          var y = d3.scale.linear()
+            .domain([0, yStackMax])
+            .range([height, 0]);
+
+          var color = d3.scale.linear()
+            .domain([0, n - 1])
+            .range(["#aad", "#556"]);
+
+          var xAxis = d3.svg.axis()
+            .scale(x)
+            .tickSize(0)
+            .tickPadding(6)
+            .orient("bottom");
+
+          var svg = d3.select(grafico).append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+          var layer = svg.selectAll(".layer")
+            .data(layers)
+            .enter().append("g")
+            .attr("class", "layer")
+            .style("fill", function(d, i) { return color(i); });
+
+          var rect = layer.selectAll("rect")
+            .data(function(d) { return d; })
+            .enter().append("rect")
+            .attr("x", function(d) { return x(d.x); })
+            .attr("y", height)
+            .attr("width", x.rangeBand())
+            .attr("height", 0);
+
+          rect.transition()
+            .delay(function(d, i) { return i * 10; })
+            .attr("y", function(d) { return y(d.y0 + d.y); })
+            .attr("height", function(d) { return y(d.y0) - y(d.y0 + d.y); });
+
+          svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
 
           var details = document.createElement('div');
           details.className = 'details';
-          //details.innerHTML = 'INGRESOS: '+CPS[i].categories[e].sum_incomes.toFixed(2) + ' €'+'<br>' + 'PAGOS: '+CPS[i].categories[e].sum_num_payments.toFixed(2)+' €';
+          details.innerHTML = '<b>INGRESOS: </b>'+sumaIngresos.toFixed(2) + ' €'+'<br>' + '<b>PAGOS: </b>'+sumaGastos.toFixed(2)+' €'+'<br>' + '' +
+          '<b>Nº TARJETAS UTILIZADAS: </b>'+totalTarjetas;
           element.appendChild(details);
 
           var object = new THREE.CSS3DObject(element);
@@ -64,10 +179,8 @@ angular.module('pruebaApp')
 
           targets.grupo.push(object);
 
-        //}
       }
-
-        // esfera
+      // esfera
 
       var vector = new THREE.Vector3();
 
@@ -128,19 +241,11 @@ angular.module('pruebaApp')
 
       }
 
-      //
-
-      renderer = new THREE.CSS3DRenderer({ antialias: true });
+      renderer = new THREE.CSS3DRenderer({});
       renderer.setSize( window.innerWidth, window.innerHeight );
       renderer.domElement.style.position = 'absolute';
       document.getElementById( 'container' ).appendChild( renderer.domElement );
 
-      //
-
-      controls = new THREE.TrackballControls( camera, renderer.domElement );
-      controls.rotateSpeed = 0.5;
-      //controls.minDistance = 500;
-      //controls.maxDistance = 6000;
       controls.addEventListener( 'change', render );
 
       var button = document.getElementById( 'grupos' );
@@ -173,8 +278,6 @@ angular.module('pruebaApp')
 
       transformar( targets.helice, 2000 );
 
-      //
-
       window.addEventListener( 'resize', onWindowResize, false );
 
     }
@@ -206,6 +309,62 @@ angular.module('pruebaApp')
         .onUpdate( render )
         .start();
 
+    }
+
+    d3.selectAll("input").on("change", change);
+
+    var timeout = setTimeout(function() {
+      d3.select("input[value=\"grouped\"]").property("checked", true).each(change);
+    }, 2000);
+
+    function change() {
+      clearTimeout(timeout);
+      if (this.value === "grouped") transitionGrouped();
+      else transitionStacked();
+    }
+
+    function transitionGrouped() {
+      y.domain([0, yGroupMax]);
+
+      rect.transition()
+        .duration(500)
+        .delay(function(d, i) { return i * 10; })
+        .attr("x", function(d, i, j) { return x(d.x) + x.rangeBand() / n * j; })
+        .attr("width", x.rangeBand() / n)
+        .transition()
+        .attr("y", function(d) { return y(d.y); })
+        .attr("height", function(d) { return height - y(d.y); });
+    }
+
+    function transitionStacked() {
+      y.domain([0, yStackMax]);
+
+      rect.transition()
+        .duration(500)
+        .delay(function(d, i) { return i * 10; })
+        .attr("y", function(d) { return y(d.y0 + d.y); })
+        .attr("height", function(d) { return y(d.y0) - y(d.y0 + d.y); })
+        .transition()
+        .attr("x", function(d) { return x(d.x); })
+        .attr("width", x.rangeBand());
+    }
+
+    function bumpLayer(n, o) {
+
+      function bump(a) {
+        var x = 1 / (.1 + Math.random()),
+          y = 2 * Math.random() - .5,
+          z = 10 / (.1 + Math.random());
+        for (var i = 0; i < n; i++) {
+          var w = (i / n - y) * z;
+          a[i] += x * Math.exp(-w * w);
+        }
+      }
+
+      var a = [], i;
+      for (i = 0; i < n; ++i) a[i] = o + o * Math.random();
+      for (i = 0; i < 5; ++i) bump(a);
+      return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
     }
 
     function onWindowResize() {
