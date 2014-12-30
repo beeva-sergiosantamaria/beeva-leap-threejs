@@ -12,8 +12,6 @@ angular.module('pruebaApp')
     camera.position.z = 3000;
     camera.setLens(30);
 
-
-
     VIZ.drawElements = function (data) {
 
     VIZ.count = data.length;

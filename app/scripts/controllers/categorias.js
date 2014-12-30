@@ -20,17 +20,6 @@ angular.module('pruebaApp')
       camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 200000 );
       camera.position.z = 5000;
 
-      controls = new THREE.TrackballControls( camera );
-      controls.rotateSpeed = 1.0;
-      controls.zoomSpeed = 1.2;
-      controls.panSpeed = 0.8;
-      controls.noZoom = false;
-      controls.noPan = false;
-      controls.staticMoving = true;
-      controls.dynamicDampingFactor = 0.3;
-      ////controls.minDistance = 500;
-      ////controls.maxDistance = 6000;
-
       scene = new THREE.Scene();
 
       var light = new THREE.DirectionalLight( 0xffffff );
@@ -66,8 +55,8 @@ angular.module('pruebaApp')
       vectorcubo.z = cubo.position.z * 2;
       //object.lookAt(vector);
 
-      //object.updateMatrix();
-      //object.matrixAutoUpdate = false;
+      cubo.updateMatrix();
+      cubo.matrixAutoUpdate = false;
 
       scene.add( cubo );
 
@@ -166,6 +155,10 @@ angular.module('pruebaApp')
         object.position.x = Math.random() * 4000 - 2000;
         object.position.y = Math.random() * 4000 - 2000;
         object.position.z = Math.random() * 4000 - 2000;
+
+        //object.updateMatrix();
+        //object.matrixAutoUpdate = false;
+
         scene.add(object);
 
         objects.push(object);
@@ -193,9 +186,9 @@ angular.module('pruebaApp')
 
         var object = new THREE.Object3D();
 
-        object.position.x = 3100 * Math.cos( theta ) * Math.sin( phi );
-        object.position.y = 3100 * Math.sin( theta ) * Math.sin( phi );
-        object.position.z = 3100 * Math.cos( phi );
+        object.position.x = 1000 * Math.cos( theta ) * Math.sin( phi );
+        object.position.y = 1000 * Math.sin( theta ) * Math.sin( phi );
+        object.position.z = 1000 * Math.cos( phi );
 
         vector.copy( object.position ).multiplyScalar( 2 );
 
@@ -251,6 +244,17 @@ angular.module('pruebaApp')
       renderercube.setSize( window.innerWidth, window.innerHeight );
       renderercube.sortObjects = false;
       container.appendChild(renderercube.domElement);
+
+      controls = new THREE.TrackballControls( camera );
+      controls.rotateSpeed = 0.5;
+      //controls.zoomSpeed = 1.2;
+      //controls.panSpeed = 0.8;
+      //controls.noZoom = false;
+      //controls.noPan = false;
+      //controls.staticMoving = true;
+      //controls.dynamicDampingFactor = 0.3;
+      ////controls.minDistance = 500;
+      ////controls.maxDistance = 6000;
 
       controls.addEventListener( 'change', render );
 
@@ -379,6 +383,7 @@ angular.module('pruebaApp')
       camera.updateProjectionMatrix();
 
       renderer.setSize( window.innerWidth, window.innerHeight );
+      renderercube.setSize( window.innerWidth, window.innerHeight );
 
       render();
 

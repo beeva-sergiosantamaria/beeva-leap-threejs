@@ -9,6 +9,7 @@ angular.module('pruebaApp')
     var camera, scene, renderer, renderercube, vectorcubo, cubo, geometry, material;
     var controls;
 
+    var categorias = [];
     var objects = [];
     var targets = { grupo: [], esfera: [], helice: [], capa: [] };
 
@@ -19,17 +20,6 @@ angular.module('pruebaApp')
 
       camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 200000 );
       camera.position.z = 5000;
-
-      controls = new THREE.TrackballControls( camera );
-      controls.rotateSpeed = 1.0;
-      controls.zoomSpeed = 1.2;
-      controls.panSpeed = 0.8;
-      controls.noZoom = false;
-      controls.noPan = false;
-      controls.staticMoving = true;
-      controls.dynamicDampingFactor = 0.3;
-      ////controls.minDistance = 500;
-      ////controls.maxDistance = 6000;
 
       scene = new THREE.Scene();
 
@@ -44,20 +34,20 @@ angular.module('pruebaApp')
       light = new THREE.AmbientLight( 0x858586 );//gris oscuro
       scene.add( light );
 
-      geometry = new THREE.OctahedronGeometry( 60000,6 );
+      geometry = new THREE.OctahedronGeometry( 120000,6 );
 
       var Textura = new THREE.ImageUtils.loadTexture("textures/text3.jpg"); //carga de textura
       var material = new THREE.MeshLambertMaterial({ map:Textura, side:THREE.DoubleSide }); //aplicacion de textura como material
       //material = new THREE.MeshLambertMaterial( { color: 0xAEB404 } );
 
       //var imageCanvas2 = document.createElement("canvas");
-      //canvg(imageCanvas2, 'images/46.svg');
+      //canvg(imageCanvas2, 'textures/text6.svg');
       //
       //var texture = new THREE.Texture(imageCanvas2);
       //texture.needsUpdate = true;
 
-      material.transparent = true;
-      material.opacity = 0.2;
+      //material.transparent = true;
+      //material.opacity = 0.5;
 
       cubo = new THREE.Mesh( geometry,material );
       vectorcubo = new THREE.Vector3();
@@ -73,13 +63,13 @@ angular.module('pruebaApp')
       vectorcubo.z = cubo.position.z * 2;
       //object.lookAt(vector);
 
-      //object.updateMatrix();
-      //object.matrixAutoUpdate = false;
+      cubo.updateMatrix();
+      cubo.matrixAutoUpdate = false;
 
       scene.add( cubo );
 
       // grupos
-      for ( var i = 0; i < CPS.length; i ++ ) {
+      for ( var i = 0; i < CPS.length; i += 5 ) {
         var sumaIngresos = 0;
         var sumaGastos = 0;
         var totalTarjetas = 0;
@@ -89,6 +79,7 @@ angular.module('pruebaApp')
           sumaIngresos += CPS[i].categories[e].sum_incomes;
           sumaGastos += CPS[i].categories[e].sum_num_payments;
           totalTarjetas += CPS[i].categories[e].sum_num_cards;
+          categorias[e] = CPS[i].categories[e].name;
           }
 
           var element = document.createElement('div');
@@ -111,6 +102,8 @@ angular.module('pruebaApp')
             yGroupMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y; }); }),
             yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
+        //console.log(layers);
+
           var margin = {top: 150, right: 10, bottom: 20, left: 10},
             width = 700 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
@@ -118,7 +111,7 @@ angular.module('pruebaApp')
           var x = d3.scale.ordinal()
             .domain(d3.range(m))
             .rangeRoundBands([0, width], .08);
-
+          console.log(d3.range(m));
           var y = d3.scale.linear()
             .domain([0, yStackMax])
             .range([height, 0]);
@@ -131,7 +124,7 @@ angular.module('pruebaApp')
             .scale(x)
             .tickSize(0)
             .tickPadding(6)
-            .orient("bottom");
+            .orient("bottom")
 
           var svg = d3.select(grafico).append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -254,10 +247,20 @@ angular.module('pruebaApp')
       var container = document.getElementById( 'container' );
       renderercube = new THREE.WebGLRenderer( {antialias: true} );
       renderercube.setClearColor( 0x000000 );
-      //renderer.setClearColor( scene.fog.color, 1 );//añadir efecto niebla
       renderercube.setSize( window.innerWidth, window.innerHeight );
       renderercube.sortObjects = false;
       container.appendChild(renderercube.domElement);
+
+      controls = new THREE.TrackballControls( camera );
+      controls.rotateSpeed = 0.5;
+      //controls.zoomSpeed = 1.2;
+      //controls.panSpeed = 0.8;
+      //controls.noZoom = false;
+      //controls.noPan = false;
+      //controls.staticMoving = true;
+      //controls.dynamicDampingFactor = 0.3;
+      ////controls.minDistance = 500;
+      ////controls.maxDistance = 6000;
 
       controls.addEventListener( 'change', render );
 
@@ -386,6 +389,7 @@ angular.module('pruebaApp')
       camera.updateProjectionMatrix();
 
       renderer.setSize( window.innerWidth, window.innerHeight );
+      renderercube.setSize( window.innerWidth, window.innerHeight );
 
       render();
 
