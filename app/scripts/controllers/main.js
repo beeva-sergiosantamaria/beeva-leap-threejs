@@ -14,7 +14,7 @@ angular.module('pruebaApp')
     var targets = { grupo: [], esfera: [], helice: [], capa: [] };
 
     init();
-    Leap.loop({loopWhileDisconnected:true, optimizeHMD:false}, function(frame) {
+    var leapController = Leap.loop({loopWhileDisconnected:true, optimizeHMD:false, gestures:true}, function(frame) {
       TWEEN.update();
       render();
       cameraControls.update(frame);
@@ -22,7 +22,25 @@ angular.module('pruebaApp')
       showCursor(frame);
       //focusObject(frame);
     });
-    //animate();
+
+      /* var leapController = new Leap.Controller({optimizeHMD: false});
+
+       leapController.on('connect', function(){
+       setInterval(function(){
+       TWEEN.update();
+       render();
+       cameraControls.update(leapController.frame());
+       controls.update();
+       showCursor(leapController.frame());
+       }, 500);
+       });
+
+       leapController.connect();
+
+       if(!leapController.connected) {
+       console.log("No Leap connected");
+       animate();
+       }*/
 
     function init() {
 
@@ -462,7 +480,11 @@ angular.module('pruebaApp')
     function showCursor(frame) {
       var hl = frame.hands.length;
       var fl = frame.pointables.length;
-      if (hl == 1 && fl == 1) {
+      var fls = 0;
+      frame.pointables.forEach(function(item){
+        if(item.extended) fls++;
+      });
+      if (hl == 1 && fls == 1) {
         var f = frame.pointables[0];
         var cont = $(renderer.domElement);
         var offset = cont.offset();
