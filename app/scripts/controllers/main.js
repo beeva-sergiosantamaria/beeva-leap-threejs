@@ -14,7 +14,7 @@ angular.module('pruebaApp')
     var targets = { grupo: [], esfera: [], helice: [], capa: [] };
 
     init();
-    Leap.loop(function(frame) {
+    Leap.loop({loopWhileDisconnected:true, optimizeHMD:false}, function(frame) {
       TWEEN.update();
       render();
       cameraControls.update(frame);
@@ -37,12 +37,12 @@ angular.module('pruebaApp')
       cameraControls.rotateFingers  = [2, 3];
 
       cameraControls.zoomEnabled    = true;
-      cameraControls.zoomSpeed      = 6;
+      cameraControls.zoomSpeed      = 3;
       cameraControls.zoomHands      = 1;
       cameraControls.zoomFingers    = [3, 4];
 
       cameraControls.panEnabled     = true;
-      cameraControls.panSpeed       = 4;
+      cameraControls.panSpeed       = 3;
       cameraControls.panHands       = 1;
       cameraControls.panFingers     = [5, 5];
       cameraControls.panRightHanded = false;
@@ -276,7 +276,6 @@ angular.module('pruebaApp')
       renderercube.sortObjects = false;
       container.appendChild(renderercube.domElement);
 
-      //controls.addEventListener( 'change', render );
 
       var button = document.getElementById( 'grupos' );
       button.addEventListener( 'click', function ( event ) {
@@ -304,6 +303,28 @@ angular.module('pruebaApp')
 
         transformar( targets.capa, 2000 );
 
+      }, false );
+
+      var button = document.getElementById( 'fullscreen' );
+      button.addEventListener( 'click', function ( event ) {
+        if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+            (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+          if (document.documentElement.requestFullScreen) {
+            document.documentElement.requestFullScreen();
+          } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+          } else if (document.documentElement.webkitRequestFullScreen) {
+            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+          }
+        } else {
+          if (document.cancelFullScreen) {
+            document.cancelFullScreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+          }
+        }
       }, false );
 
       transformar( targets.helice, 2000 );
