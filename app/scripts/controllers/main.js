@@ -14,33 +14,28 @@ angular.module('pruebaApp')
     var targets = { grupo: [], esfera: [], helice: [], capa: [] };
 
     init();
-    var leapController = Leap.loop({loopWhileDisconnected:true, optimizeHMD:false, gestures:true}, function(frame) {
+
+    var leapController = new Leap.Controller({optimizeHMD: false});
+    leapController.connect();
+
+    setInterval(function(){
+      cameraControls.update(leapController.frame());
+      controls.update();
+      showCursor(leapController.frame());
       TWEEN.update();
       render();
-      cameraControls.update(frame);
-      controls.update();
-      showCursor(frame);
-      //focusObject(frame);
-    });
+    }, 40);
 
-      /* var leapController = new Leap.Controller({optimizeHMD: false});
+    /*
+     Leap.loop(function(frame){
 
-       leapController.on('connect', function(){
-       setInterval(function(){
-       TWEEN.update();
-       render();
-       cameraControls.update(leapController.frame());
-       controls.update();
-       showCursor(leapController.frame());
-       }, 500);
-       });
-
-       leapController.connect();
-
-       if(!leapController.connected) {
-       console.log("No Leap connected");
-       animate();
-       }*/
+     cameraControls.update(frame);
+     controls.update();
+     showCursor(frame);
+     TWEEN.update();
+     render();
+     })
+     */
 
     function init() {
 
@@ -50,7 +45,7 @@ angular.module('pruebaApp')
 
       cameraControls = new THREE.LeapCameraControls(camera);
       cameraControls.rotateEnabled  = true;
-      cameraControls.rotateSpeed    = 3;
+      cameraControls.rotateSpeed    = 1;
       cameraControls.rotateHands    = 1;
       cameraControls.rotateFingers  = [2, 3];
 
@@ -60,7 +55,8 @@ angular.module('pruebaApp')
       cameraControls.zoomFingers    = [3, 4];
 
       cameraControls.panEnabled     = true;
-      cameraControls.panSpeed       = 3;
+      cameraControls.zoomStabilized    = true;
+      cameraControls.panSpeed       = 1;
       cameraControls.panHands       = 1;
       cameraControls.panFingers     = [5, 5];
       cameraControls.panRightHanded = false;
