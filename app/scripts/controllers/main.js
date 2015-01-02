@@ -35,6 +35,7 @@ angular.module('pruebaApp')
     buttons.push($("#helices"));
     buttons.push($("#enlace"));
     buttons.push($("#fullscreentoggle"));
+    buttons.push($("#moredata"));
     /*
      Leap.loop(function(frame){
 
@@ -54,8 +55,8 @@ angular.module('pruebaApp')
       controls = new THREE.TrackballControls( camera );
 
       controls.rotateSpeed = 0.2;
-      //controls.zoomSpeed = 1.2;
-      //controls.panSpeed = 0.8;
+      controls.zoomSpeed = 0.2;
+      controls.panSpeed = 0.2;
       //controls.noZoom = false;
       //controls.noPan = false;
       //controls.staticMoving = true;
@@ -68,19 +69,19 @@ angular.module('pruebaApp')
 
       cameraControls = new THREE.LeapCameraControls(camera);
       cameraControls.rotateEnabled  = true;
-      cameraControls.rotateSpeed    = 3;
+      cameraControls.rotateSpeed    = 1;
       cameraControls.rotateHands    = 1;
-      cameraControls.rotateFingers  = [2, 2];
+      cameraControls.rotateFingers  = [2, 3];
 
       cameraControls.zoomEnabled    = true;
-      cameraControls.zoomSpeed      = 2;
-      cameraControls.zoomHands      = 1;
-      cameraControls.zoomFingers    = [3, 4];
+      cameraControls.zoomSpeed      = 1;
+      cameraControls.zoomHands      = 2;
+      cameraControls.zoomFingers    = [6, 10];
 
       cameraControls.panEnabled     = true;
-      cameraControls.panSpeed       = 3;
+      cameraControls.panSpeed       = 1;
       cameraControls.panHands       = 1;
-      cameraControls.panFingers     = [5, 5];
+      cameraControls.panFingers     = [4, 5];
       cameraControls.panRightHanded = false;
 
       scene = new THREE.Scene();
@@ -127,7 +128,7 @@ angular.module('pruebaApp')
       console.log(CPS.length);
 
       // esfera
-      addInitialData(12);
+      addData(12);
 
 
 
@@ -182,7 +183,7 @@ angular.module('pruebaApp')
       var button = document.getElementById( 'moredata' );
       button.addEventListener( 'click', function ( event ) {
         event.preventDefault();
-        addInitialData(12);
+        addData(12);
       }, false );
 
       transformar( targets.helice, 2000 );
@@ -227,7 +228,7 @@ angular.module('pruebaApp')
     }, 2000);
 
 
-    function addInitialData(howMany){
+    function addData(howMany){
       if(indexPointer + howMany > CPS.length)
         return;
       for ( var i = indexPointer; i < indexPointer + howMany; i += 1 ) {
@@ -324,10 +325,13 @@ angular.module('pruebaApp')
             .attr("y", height - 6)
             .text(CPS[i]['name']);
 
+
         var details = document.createElement('div');
         details.className = 'details';
-        details.innerHTML = '<b>INGRESOS: </b>'+sumaIngresos.toFixed(2) + ' €'+'<br>' + '<b>PAGOS: </b>'+sumaGastos.toFixed(2)+' €'+'<br>' + '' +
-        '<b>Nº TARJETAS UTILIZADAS: </b>'+totalTarjetas;
+        details.innerHTML =
+            '<b>INGRESOS: </b>' + beautifyNumber(sumaIngresos) + ' €'+'<br>' +
+            '<b>PAGOS: </b>' + beautifyNumber(sumaGastos) +'<br>' +
+            '<b>Nº TARJETAS UTILIZADAS: </b>' + beautifyNumber(totalTarjetas);
         element.appendChild(details);
 
         var object = new THREE.CSS3DObject(element);
@@ -411,6 +415,12 @@ angular.module('pruebaApp')
       }
 
       indexPointer += howMany;
+    }
+
+    function beautifyNumber(num){
+      var aux = num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+      aux = aux.substring(0, aux.length - 3);
+      return aux;
     }
 
     function change() {
