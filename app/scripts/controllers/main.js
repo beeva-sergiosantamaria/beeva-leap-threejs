@@ -128,12 +128,11 @@ angular.module('pruebaApp')
         var totalTarjetas = 0;
 
         for (var e = 0; e < CPS[i].categories.length; e++) {
-
           sumaIngresos += CPS[i].categories[e].sum_incomes;
           sumaGastos += CPS[i].categories[e].sum_num_payments;
           totalTarjetas += CPS[i].categories[e].sum_num_cards;
           categorias[e] = CPS[i].categories[e].name;
-          }
+        }
 
           var element = document.createElement('div');
           element.className = 'element';
@@ -155,8 +154,6 @@ angular.module('pruebaApp')
             yGroupMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y; }); }),
             yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-        //console.log(layers);
-
           var margin = {top: 150, right: 10, bottom: 20, left: 10},
             width = 700 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
@@ -164,7 +161,7 @@ angular.module('pruebaApp')
           var x = d3.scale.ordinal()
             .domain(d3.range(m))
             .rangeRoundBands([0, width], .08);
-          console.log(d3.range(m));
+
           var y = d3.scale.linear()
             .domain([0, yStackMax])
             .range([height, 0]);
@@ -175,9 +172,13 @@ angular.module('pruebaApp')
 
           var xAxis = d3.svg.axis()
             .scale(x)
-            .tickSize(0)
-            .tickPadding(6)
-            .orient("bottom")
+              .tickFormat(function(d) {
+                console.log(CPS[i]);
+                if(CPS[i].categories.length <= 10)
+                  return categorias[d];
+                else return categorias[d].substring(0, 9);
+              })
+              .orient("bottom")
 
           var svg = d3.select(grafico).append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -208,6 +209,13 @@ angular.module('pruebaApp')
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis);
+
+        svg.append("text")
+            .attr("class", "x label")
+            .attr("text-anchor", "end")
+            .attr("x", width)
+            .attr("y", height - 6)
+            .text(CPS[i]['name']);
 
           var details = document.createElement('div');
           details.className = 'details';
@@ -512,8 +520,6 @@ angular.module('pruebaApp')
     function intersections(frame, coords) {
       buttons.forEach(function(item) {
         if (checkMouseCollision(coords[0], coords[1], item)) {
-          console.log(item.attr('id'));
-          console.log(lastDivItems);
           if(lastDivItem == undefined)
             lastDivItems = 0;
           else if(lastDivItem == item)
@@ -525,7 +531,6 @@ angular.module('pruebaApp')
 
           if(lastDivItems > 20){
             if(item.attr('id') === "enlace"){
-              console.log(item.children().attr('ng-href'));
               window.location = item.children().attr('ng-href');
             }
             else item.trigger( "click" );
