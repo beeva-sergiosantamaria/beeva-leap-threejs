@@ -16,6 +16,7 @@ angular.module('pruebaApp')
     var targets = { grupo: [], esfera: [], helice: [], capa: [] };
     var actualTargets;
     var buttons = [];
+
     init();
 
     var leapController = new Leap.Controller({optimizeHMD: false});
@@ -123,9 +124,6 @@ angular.module('pruebaApp')
       //cubo.matrixAutoUpdate = false;
       //
       //scene.add( cubo );
-
-      // grupos
-      console.log(CPS.length);
 
       // esfera
       addData(12);
