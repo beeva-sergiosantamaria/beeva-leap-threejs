@@ -31,7 +31,8 @@ angular.module('pruebaApp')
     buttons.push($("#capas"));
     buttons.push($("#esferas"));
     buttons.push($("#helices"));
-    buttons.push($("#fullscreen"));
+    buttons.push($("#enlace"));
+    buttons.push($("#fullscreentoggle"));
     /*
      Leap.loop(function(frame){
 
@@ -332,8 +333,9 @@ angular.module('pruebaApp')
 
       }, false );
 
-      var button = document.getElementById( 'fullscreen' );
+      var button = document.getElementById( 'fullscreentoggle' );
       button.addEventListener( 'click', function ( event ) {
+        event.preventDefault();
         toggleFullscreen();
       }, false );
 
@@ -429,7 +431,6 @@ angular.module('pruebaApp')
     }
 
     function onWindowResize() {
-
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
 
@@ -441,20 +442,14 @@ angular.module('pruebaApp')
     }
 
     function animate() {
-
       requestAnimationFrame( animate );
-
       TWEEN.update();
-
       controls.update();
-
     }
 
     function render() {
-
       renderer.render( scene, camera );
       renderercube.render( scene, camera );
-
     }
 
     function transform(tipPosition, w, h) {
@@ -512,14 +507,31 @@ angular.module('pruebaApp')
       }
     }
 
-      var lastDivItems = 0;
+    var lastDivItems = 0;
+    var lastDivItem;
     function intersections(frame, coords) {
       buttons.forEach(function(item) {
         if (checkMouseCollision(coords[0], coords[1], item)) {
-          console.log(item);
-          lastDivItems++;
-          if(lastDivItems > 12)
-            item.trigger( "click" );
+          console.log(item.attr('id'));
+          console.log(lastDivItems);
+          if(lastDivItem == undefined)
+            lastDivItems = 0;
+          else if(lastDivItem == item)
+            lastDivItems++;
+          else
+            lastDivItems = 1;
+
+          lastDivItem = item;
+
+          if(lastDivItems > 20){
+            if(item.attr('id') === "enlace"){
+              console.log(item.children().attr('ng-href'));
+              window.location = item.children().attr('ng-href');
+            }
+            else item.trigger( "click" );
+            lastDivItem = undefined;
+            lastDivItems = 0;
+          }
         }
 
       });
@@ -530,7 +542,6 @@ angular.module('pruebaApp')
       var objY = element.offset().top;
       var objW = element.width();
       var objH = element.height();
-
 
       if(x > objX && x< (objX + objW) && (y >objY && y < (objY + objH)))
         return true;
