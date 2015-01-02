@@ -9,10 +9,12 @@ angular.module('pruebaApp')
     var camera, scene, renderer, renderercube, vectorcubo, cubo, geometry, material;
     var objectsControls = [], cameraControls, controls;
     var projector;
+    var indexPointer = 0;
 
     var categorias = [];
     var objects = [];
     var targets = { grupo: [], esfera: [], helice: [], capa: [] };
+    var actualTargets;
     var buttons = [];
     init();
 
@@ -51,7 +53,7 @@ angular.module('pruebaApp')
 
       controls = new THREE.TrackballControls( camera );
 
-      controls.rotateSpeed = 0.5;
+      controls.rotateSpeed = 0.2;
       //controls.zoomSpeed = 1.2;
       //controls.panSpeed = 0.8;
       //controls.noZoom = false;
@@ -68,15 +70,14 @@ angular.module('pruebaApp')
       cameraControls.rotateEnabled  = true;
       cameraControls.rotateSpeed    = 3;
       cameraControls.rotateHands    = 1;
-      cameraControls.rotateFingers  = [2, 3];
+      cameraControls.rotateFingers  = [2, 2];
 
       cameraControls.zoomEnabled    = true;
-      cameraControls.zoomSpeed      = 3;
+      cameraControls.zoomSpeed      = 2;
       cameraControls.zoomHands      = 1;
       cameraControls.zoomFingers    = [3, 4];
 
-      //cameraControls.panEnabled     = true;
-      cameraControls.zoomStabilized    = true;
+      cameraControls.panEnabled     = true;
       cameraControls.panSpeed       = 3;
       cameraControls.panHands       = 1;
       cameraControls.panFingers     = [5, 5];
@@ -96,209 +97,39 @@ angular.module('pruebaApp')
       light = new THREE.AmbientLight( 0x858586 );//gris oscuro
       scene.add( light );
 
-      geometry = new THREE.OctahedronGeometry( 120000,6 );
-
-      var Textura = new THREE.ImageUtils.loadTexture("textures/text3.jpg"); //carga de textura
-      material = new THREE.MeshLambertMaterial({ map:Textura, side:THREE.DoubleSide }); //aplicacion de textura como material
-      //material = new THREE.MeshLambertMaterial( { color: 0xAEB404 } );
-
-      cubo = new THREE.Mesh( geometry,material );
-      vectorcubo = new THREE.Vector3();
-
-      cubo.position.x = 110;
-      cubo.position.y = 0;
-      cubo.position.z = 110;
-
-      //object.rotation.y = (0.36*i);
-
-      vectorcubo.x = cubo.position.x * 2;
-      vectorcubo.y = cubo.position.y;
-      vectorcubo.z = cubo.position.z * 2;
-      //object.lookAt(vector);
-
-      cubo.updateMatrix();
-      cubo.matrixAutoUpdate = false;
-
-      scene.add( cubo );
+      // Background
+      //geometry = new THREE.OctahedronGeometry( 120000,6 );
+      //
+      //var Textura = new THREE.ImageUtils.loadTexture("textures/text3.jpg"); //carga de textura
+      //material = new THREE.MeshLambertMaterial({ map:Textura, side:THREE.DoubleSide }); //aplicacion de textura como material
+      ////material = new THREE.MeshLambertMaterial( { color: 0xAEB404 } );
+      //
+      //cubo = new THREE.Mesh( geometry,material );
+      //vectorcubo = new THREE.Vector3();
+      //
+      //cubo.position.x = 110;
+      //cubo.position.y = 0;
+      //cubo.position.z = 110;
+      //
+      ////object.rotation.y = (0.36*i);
+      //
+      //vectorcubo.x = cubo.position.x * 2;
+      //vectorcubo.y = cubo.position.y;
+      //vectorcubo.z = cubo.position.z * 2;
+      ////object.lookAt(vector);
+      //
+      //cubo.updateMatrix();
+      //cubo.matrixAutoUpdate = false;
+      //
+      //scene.add( cubo );
 
       // grupos
-      for ( var i = 0; i < CPS.length; i += 5 ) {
-        var sumaIngresos = 0;
-        var sumaGastos = 0;
-        var totalTarjetas = 0;
+      console.log(CPS.length);
 
-        for (var e = 0; e < CPS[i].categories.length; e++) {
-          sumaIngresos += CPS[i].categories[e].sum_incomes;
-          sumaGastos += CPS[i].categories[e].sum_num_payments;
-          totalTarjetas += CPS[i].categories[e].sum_num_cards;
-          categorias[e] = CPS[i].categories[e].name;
-        }
-
-          var element = document.createElement('div');
-          element.className = 'element';
-          element.style.backgroundColor = 'rgba(0,127,127,0.8'+/* + ( Math.random() * 0.5 + 0.25 ) + */')';
-
-          var symbol = document.createElement('div');
-          symbol.className = 'symbol';
-          symbol.textContent ='C.P.: '+CPS[i]._id;
-          element.appendChild(symbol);
-
-          var grafico = document.createElement('div');
-            grafico.className = 'grafico';
-            element.appendChild(grafico);
-
-          var n = 3, // number of layers
-            m = CPS[i].categories.length, // number of samples per layer
-            stack = d3.layout.stack(),
-            layers = stack(d3.range(n).map(function() { return bumpLayer(m, .1); })),
-            yGroupMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y; }); }),
-            yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
-
-          var margin = {top: 150, right: 10, bottom: 20, left: 10},
-            width = 700 - margin.left - margin.right,
-            height = 400 - margin.top - margin.bottom;
-
-          var x = d3.scale.ordinal()
-            .domain(d3.range(m))
-            .rangeRoundBands([0, width], .08);
-
-          var y = d3.scale.linear()
-            .domain([0, yStackMax])
-            .range([height, 0]);
-
-          var color = d3.scale.linear()
-            .domain([0, n - 1])
-            .range(["#aad", "#556"]);
-
-          var xAxis = d3.svg.axis()
-            .scale(x)
-              .tickFormat(function(d) {
-                console.log(CPS[i]);
-                if(CPS[i].categories.length <= 10)
-                  return categorias[d];
-                else return categorias[d].substring(0, 9);
-              })
-              .orient("bottom")
-
-          var svg = d3.select(grafico).append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-          var layer = svg.selectAll(".layer")
-            .data(layers)
-            .enter().append("g")
-            .attr("class", "layer")
-            .style("fill", function(d, i) { return color(i); });
-
-          var rect = layer.selectAll("rect")
-            .data(function(d) { return d; })
-            .enter().append("rect")
-            .attr("x", function(d) { return x(d.x); })
-            .attr("y", height)
-            .attr("width", x.rangeBand())
-            .attr("height", 0);
-
-          rect.transition()
-            .delay(function(d, i) { return i * 10; })
-            .attr("y", function(d) { return y(d.y0 + d.y); })
-            .attr("height", function(d) { return y(d.y0) - y(d.y0 + d.y); });
-
-          svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-
-        svg.append("text")
-            .attr("class", "x label")
-            .attr("text-anchor", "end")
-            .attr("x", width)
-            .attr("y", height - 6)
-            .text(CPS[i]['name']);
-
-          var details = document.createElement('div');
-          details.className = 'details';
-          details.innerHTML = '<b>INGRESOS: </b>'+sumaIngresos.toFixed(2) + ' €'+'<br>' + '<b>PAGOS: </b>'+sumaGastos.toFixed(2)+' €'+'<br>' + '' +
-          '<b>Nº TARJETAS UTILIZADAS: </b>'+totalTarjetas;
-          element.appendChild(details);
-
-          var object = new THREE.CSS3DObject(element);
-          object.position.x = Math.random() * 4000 - 2000;
-          object.position.y = Math.random() * 4000 - 2000;
-          object.position.z = Math.random() * 4000 - 2000;
-          scene.add(object);
-
-          objects.push(object);
-
-          //
-
-          var object = new THREE.Object3D();
-          object.position.x = Math.random() * 4000 - 2000;
-          object.position.y = Math.random() * 4000 - 2000;
-          object.position.z = Math.random() * 4000 - 2000;
-          //object.position.x = ( i * 200 ) - 4000;
-          //object.position.y = i;
-
-          targets.grupo.push(object);
-
-      }
       // esfera
+      addInitialData(12);
 
-      var vector = new THREE.Vector3();
 
-      for ( var i = 0, l = objects.length; i < l; i ++ ) {
-
-        var phi = Math.acos( -1 + ( 2 * i ) / l );
-        var theta = Math.sqrt( l * Math.PI ) * phi;
-
-        var object = new THREE.Object3D();
-
-        object.position.x = 3100 * Math.cos( theta ) * Math.sin( phi );
-        object.position.y = 3100 * Math.sin( theta ) * Math.sin( phi );
-        object.position.z = 3100 * Math.cos( phi );
-
-        vector.copy( object.position ).multiplyScalar( 2 );
-
-        object.lookAt( vector );
-
-        targets.esfera.push( object );
-
-      }
-      // helice
-
-      var vector = new THREE.Vector3();
-
-      for ( var i = 0, l = objects.length; i < l; i ++ ) {
-
-        var phi = i * 0.300 + Math.PI;
-
-        var object = new THREE.Object3D();
-
-        object.position.x = 3000 * Math.sin( phi );
-        object.position.y = - ( i * 32 ) + 800;
-        object.position.z = 3000 * Math.cos( phi );
-
-        vector.x = object.position.x * 2;
-        vector.y = object.position.y;
-        vector.z = object.position.z * 2;
-
-        object.lookAt( vector );
-
-        targets.helice.push( object );
-      }
-      // capas
-
-      for ( var i = 0; i < objects.length; i ++ ) {
-
-        var object = new THREE.Object3D();
-
-        object.position.x = ( ( i % 5 ) * 900 ) - 800;
-        object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 800 ) + 800;
-        object.position.z = ( Math.floor( i / 25 ) ) * 2500 - 2000;
-
-        targets.capa.push( object );
-      }
 
       renderer = new THREE.CSS3DRenderer({});
       renderer.setSize( window.innerWidth, window.innerHeight );
@@ -306,11 +137,11 @@ angular.module('pruebaApp')
       document.getElementById( 'container' ).appendChild( renderer.domElement );
 
       var container = document.getElementById( 'container' );
-      renderercube = new THREE.WebGLRenderer( {antialias: true} );
-      renderercube.setClearColor( 0x000000 );
-      renderercube.setSize( window.innerWidth, window.innerHeight );
-      renderercube.sortObjects = false;
-      container.appendChild(renderercube.domElement);
+      //renderercube = new THREE.WebGLRenderer( {antialias: true} );
+      //renderercube.setClearColor( 0x000000 );
+      //renderercube.setSize( window.innerWidth, window.innerHeight );
+      //renderercube.sortObjects = false;
+      //container.appendChild(renderercube.domElement);
 
 
       var button = document.getElementById( 'grupos' );
@@ -347,6 +178,13 @@ angular.module('pruebaApp')
         toggleFullscreen();
       }, false );
 
+
+      var button = document.getElementById( 'moredata' );
+      button.addEventListener( 'click', function ( event ) {
+        event.preventDefault();
+        addInitialData(12);
+      }, false );
+
       transformar( targets.helice, 2000 );
 
       window.addEventListener( 'resize', onWindowResize, false );
@@ -354,7 +192,7 @@ angular.module('pruebaApp')
     }
 
     function transformar( targets, duration ) {
-
+      actualTargets = targets;
       TWEEN.removeAll();
 
 
@@ -387,6 +225,193 @@ angular.module('pruebaApp')
     var timeout = setTimeout(function() {
       d3.select("input[value=\"grouped\"]").property("checked", true).each(change);
     }, 2000);
+
+
+    function addInitialData(howMany){
+      if(indexPointer + howMany > CPS.length)
+        return;
+      for ( var i = indexPointer; i < indexPointer + howMany; i += 1 ) {
+        var sumaIngresos = 0;
+        var sumaGastos = 0;
+        var totalTarjetas = 0;
+
+        for (var e = 0; e < CPS[i].categories.length; e++) {
+          sumaIngresos += CPS[i].categories[e].sum_incomes;
+          sumaGastos += CPS[i].categories[e].sum_num_payments;
+          totalTarjetas += CPS[i].categories[e].sum_num_cards;
+          categorias[e] = CPS[i].categories[e].name;
+        }
+
+        var element = document.createElement('div');
+        element.className = 'element';
+        element.style.backgroundColor = 'rgba(0,127,127,0.8'+/* + ( Math.random() * 0.5 + 0.25 ) + */')';
+
+        var symbol = document.createElement('div');
+        symbol.className = 'symbol';
+        symbol.textContent ='C.P.: '+CPS[i]._id;
+        element.appendChild(symbol);
+
+        var grafico = document.createElement('div');
+        grafico.className = 'grafico';
+        element.appendChild(grafico);
+
+        var n = 3, // number of layers
+            m = CPS[i].categories.length, // number of samples per layer
+            stack = d3.layout.stack(),
+            layers = stack(d3.range(n).map(function() { return bumpLayer(m, .1); })),
+            yGroupMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y; }); }),
+            yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
+
+        var margin = {top: 150, right: 10, bottom: 20, left: 10},
+            width = 700 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+        var x = d3.scale.ordinal()
+            .domain(d3.range(m))
+            .rangeRoundBands([0, width], .08);
+
+        var y = d3.scale.linear()
+            .domain([0, yStackMax])
+            .range([height, 0]);
+
+        var color = d3.scale.linear()
+            .domain([0, n - 1])
+            .range(["#aad", "#556"]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .tickFormat(function(d) {
+              if(CPS[i].categories.length <= 10)
+                return categorias[d];
+              else return categorias[d].substring(0, 9);
+            })
+            .orient("bottom")
+
+        var svg = d3.select(grafico).append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var layer = svg.selectAll(".layer")
+            .data(layers)
+            .enter().append("g")
+            .attr("class", "layer")
+            .style("fill", function(d, i) { return color(i); });
+
+        var rect = layer.selectAll("rect")
+            .data(function(d) { return d; })
+            .enter().append("rect")
+            .attr("x", function(d) { return x(d.x); })
+            .attr("y", height)
+            .attr("width", x.rangeBand())
+            .attr("height", 0);
+
+        rect.transition()
+            .delay(function(d, i) { return i * 10; })
+            .attr("y", function(d) { return y(d.y0 + d.y); })
+            .attr("height", function(d) { return y(d.y0) - y(d.y0 + d.y); });
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        svg.append("text")
+            .attr("class", "x label")
+            .attr("text-anchor", "end")
+            .attr("x", width)
+            .attr("y", height - 6)
+            .text(CPS[i]['name']);
+
+        var details = document.createElement('div');
+        details.className = 'details';
+        details.innerHTML = '<b>INGRESOS: </b>'+sumaIngresos.toFixed(2) + ' €'+'<br>' + '<b>PAGOS: </b>'+sumaGastos.toFixed(2)+' €'+'<br>' + '' +
+        '<b>Nº TARJETAS UTILIZADAS: </b>'+totalTarjetas;
+        element.appendChild(details);
+
+        var object = new THREE.CSS3DObject(element);
+        object.position.x = Math.random() * 4000 - 2000;
+        object.position.y = Math.random() * 4000 - 2000;
+        object.position.z = Math.random() * 4000 - 2000;
+        scene.add(object);
+
+        objects.push(object);
+
+        //
+
+        var object = new THREE.Object3D();
+        object.position.x = Math.random() * 4000 - 2000;
+        object.position.y = Math.random() * 4000 - 2000;
+        object.position.z = Math.random() * 4000 - 2000;
+        //object.position.x = ( i * 200 ) - 4000;
+        //object.position.y = i;
+
+        targets.grupo.push(object);
+
+      }
+
+      var vector = new THREE.Vector3();
+
+      for ( var i = indexPointer, l = indexPointer + howMany; i < l; i ++ ) {
+
+        var phi = Math.acos( -1 + ( 2 * i ) / l );
+        var theta = Math.sqrt( l * Math.PI ) * phi;
+
+        var object = new THREE.Object3D();
+
+        object.position.x = 3100 * Math.cos( theta ) * Math.sin( phi );
+        object.position.y = 3100 * Math.sin( theta ) * Math.sin( phi );
+        object.position.z = 3100 * Math.cos( phi );
+
+        vector.copy( object.position ).multiplyScalar( 2 );
+
+        object.lookAt( vector );
+
+        targets.esfera.push( object );
+
+      }
+      // helice
+
+      var vector = new THREE.Vector3();
+
+      for ( var i = indexPointer, l = indexPointer + howMany; i < l; i ++ ) {
+
+        var phi = i * 0.300 + Math.PI;
+
+        var object = new THREE.Object3D();
+
+        object.position.x = 3000 * Math.sin( phi );
+        object.position.y = - ( i * 32 ) + 800;
+        object.position.z = 3000 * Math.cos( phi );
+
+        vector.x = object.position.x * 2;
+        vector.y = object.position.y;
+        vector.z = object.position.z * 2;
+
+        object.lookAt( vector );
+
+        targets.helice.push( object );
+      }
+      // capas
+
+      for ( var i = indexPointer; i < indexPointer + howMany; i ++ ) {
+
+        var object = new THREE.Object3D();
+
+        object.position.x = ( ( i % 5 ) * 900 ) - 800;
+        object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 800 ) + 800;
+        object.position.z = ( Math.floor( i / 25 ) ) * 2500 - 2000;
+
+        targets.capa.push( object );
+      }
+
+      if(actualTargets) {
+        transformar(actualTargets, 2000);
+      }
+
+      indexPointer += howMany;
+    }
 
     function change() {
       clearTimeout(timeout);
@@ -443,7 +468,7 @@ angular.module('pruebaApp')
       camera.updateProjectionMatrix();
 
       renderer.setSize( window.innerWidth, window.innerHeight );
-      renderercube.setSize( window.innerWidth, window.innerHeight );
+      //renderercube.setSize( window.innerWidth, window.innerHeight );
 
       render();
 
@@ -457,7 +482,7 @@ angular.module('pruebaApp')
 
     function render() {
       renderer.render( scene, camera );
-      renderercube.render( scene, camera );
+      //renderercube.render( scene, camera );
     }
 
     function transform(tipPosition, w, h) {
