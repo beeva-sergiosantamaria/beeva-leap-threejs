@@ -69,16 +69,6 @@ angular.module('pruebaApp')
       annyang.addCommands(commands);
       annyang.start();
     }
-    /*
-     Leap.loop(function(frame){
-
-     cameraControls.update(frame);
-     controls.update();
-     showCursor(frame);
-     TWEEN.update();
-     render();
-     })
-     */
 
     function init() {
 
@@ -90,13 +80,6 @@ angular.module('pruebaApp')
       controls.rotateSpeed = 0.2;
       controls.zoomSpeed = 0.2;
       controls.panSpeed = 0.2;
-      //controls.noZoom = false;
-      //controls.noPan = false;
-      //controls.staticMoving = true;
-      //controls.dynamicDampingFactor = 0.3;
-      ////controls.minDistance = 500;
-      ////controls.maxDistance = 6000;
-
       //controls.addEventListener( 'change', render );
       
 
@@ -120,44 +103,6 @@ angular.module('pruebaApp')
       scene = new THREE.Scene();
       projector = new THREE.Projector();
 
-      var light = new THREE.DirectionalLight( 0xffffff );
-      light.position.set( 1, 1, 1 );
-      scene.add( light );
-
-      light = new THREE.DirectionalLight( 0x002288 );//azul
-      light.position.set( -1, -1, -1 );
-      scene.add( light );
-
-      light = new THREE.AmbientLight( 0x858586 );//gris oscuro
-      scene.add( light );
-
-      // Background
-      //geometry = new THREE.OctahedronGeometry( 120000,6 );
-      //
-      //var Textura = new THREE.ImageUtils.loadTexture("textures/text3.jpg"); //carga de textura
-      //material = new THREE.MeshLambertMaterial({ map:Textura, side:THREE.DoubleSide }); //aplicacion de textura como material
-      ////material = new THREE.MeshLambertMaterial( { color: 0xAEB404 } );
-      //
-      //cubo = new THREE.Mesh( geometry,material );
-      //vectorcubo = new THREE.Vector3();
-      //
-      //cubo.position.x = 110;
-      //cubo.position.y = 0;
-      //cubo.position.z = 110;
-      //
-      ////object.rotation.y = (0.36*i);
-      //
-      //vectorcubo.x = cubo.position.x * 2;
-      //vectorcubo.y = cubo.position.y;
-      //vectorcubo.z = cubo.position.z * 2;
-      ////object.lookAt(vector);
-      //
-      //cubo.updateMatrix();
-      //cubo.matrixAutoUpdate = false;
-      //
-      //scene.add( cubo );
-
-      // esfera
       addData(12);
 
 
@@ -168,38 +113,32 @@ angular.module('pruebaApp')
       document.getElementById( 'container' ).appendChild( renderer.domElement );
 
       var container = document.getElementById( 'container' );
-      //renderercube = new THREE.WebGLRenderer( {antialias: true} );
-      //renderercube.setClearColor( 0x000000 );
-      //renderercube.setSize( window.innerWidth, window.innerHeight );
-      //renderercube.sortObjects = false;
-      //container.appendChild(renderercube.domElement);
-
 
       var button = document.getElementById( 'grupos' );
       button.addEventListener( 'click', function ( event ) {
 
-        transformar( targets.grupo, 2000 );
+        transformar( targets.grupo, 1000 );
 
       }, false );
 
       var button = document.getElementById( 'esferas' );
       button.addEventListener( 'click', function ( event ) {
 
-        transformar( targets.esfera, 2000 );
+        transformar( targets.esfera, 1000 );
 
       }, false );
 
       var button = document.getElementById( 'helices' );
       button.addEventListener( 'click', function ( event ) {
 
-        transformar( targets.helice, 2000 );
+        transformar( targets.helice, 1000 );
 
       }, false );
 
       var button = document.getElementById( 'capas' );
       button.addEventListener( 'click', function ( event ) {
 
-        transformar( targets.capa, 2000 );
+        transformar( targets.capa, 1000 );
 
       }, false );
 
@@ -216,7 +155,7 @@ angular.module('pruebaApp')
         addData(12);
       }, false );
 
-      transformar( targets.helice, 2000 );
+      transformar( targets.helice, 1000 );
 
       window.addEventListener( 'resize', onWindowResize, false );
 
@@ -509,7 +448,6 @@ angular.module('pruebaApp')
       camera.updateProjectionMatrix();
 
       renderer.setSize( window.innerWidth, window.innerHeight );
-      //renderercube.setSize( window.innerWidth, window.innerHeight );
 
       render();
 
@@ -523,7 +461,6 @@ angular.module('pruebaApp')
 
     function render() {
       renderer.render( scene, camera );
-      //renderercube.render( scene, camera );
     }
 
     function transform(tipPosition, w, h) {
