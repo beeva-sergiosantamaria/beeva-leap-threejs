@@ -157,7 +157,7 @@ angular.module('pruebaApp')
         var xAxis = d3.svg.axis()
           .scale(x)
           .tickFormat(function(d) {
-              return DISTRICTS[categorias[i].cps[d].cp_dest].substring(0,9);
+              return categorias[i].cps[d].cp_dest;
           })
           .orient("center");
 
