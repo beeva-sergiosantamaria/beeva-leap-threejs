@@ -41,7 +41,6 @@ angular.module('pruebaApp')
     buttons.push($("#moredata"));
 
     if (USE_VOICE && annyang) {
-      console.log(annyang);
       annyang.setLanguage('es-ES');
       var commands = {
         'aleatorio': function() {
@@ -107,7 +106,7 @@ angular.module('pruebaApp')
 
 
 
-      renderer = new THREE.CSS3DRenderer({});
+      renderer = new THREE.CSS3DStereoRenderer({});
       renderer.setSize( window.innerWidth, window.innerHeight );
       renderer.domElement.style.position = 'absolute';
       document.getElementById( 'container' ).appendChild( renderer.domElement );
