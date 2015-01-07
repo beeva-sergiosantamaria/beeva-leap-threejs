@@ -547,9 +547,9 @@ angular.module('pruebaApp')
 
     function checkMouseCollision(x, y, element) {
       var objX = element.offset().left;
-      var objY = element.offset().top;
+      var objY = element.offset().top - 25;
       var objW = element.width();
-      var objH = element.height();
+      var objH = element.height() + 25;
 
       if(x > objX && x< (objX + objW) && (y >objY && y < (objY + objH)))
         return true;
