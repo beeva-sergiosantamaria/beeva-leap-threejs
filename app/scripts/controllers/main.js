@@ -71,7 +71,7 @@ angular.module('pruebaApp')
 
     function init() {
 
-      camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 200000 );
+      camera = new THREE.PerspectiveCamera( 8, window.innerWidth / window.innerHeight, 1, 200000 );
       camera.position.z = 5000;
 
       controls = new THREE.TrackballControls( camera );
@@ -316,12 +316,12 @@ angular.module('pruebaApp')
         var object = new THREE.Object3D();
 
         object.position.x = 3000 * Math.sin( phi );
-        object.position.y = 300;
-        object.position.z = - 3000 * Math.cos( phi );
+        object.position.y = 0;
+        object.position.z = 3000 * Math.cos( phi );
 
-        vector.x = object.position.x * 2;
+        vector.x = object.position.x * - 2;
         vector.y = object.position.y;
-        vector.z = object.position.z * 2;
+        vector.z = object.position.z * - 2;
 
         object.lookAt( vector );
 
