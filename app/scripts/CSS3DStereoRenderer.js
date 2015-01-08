@@ -198,7 +198,8 @@ THREE.CSS3DStereoRenderer = function () {
 	};
 
 	var renderObject = function ( object, camera, cameraElement, side ) {
-
+		if(object.className)
+			console.log(object.className);
 		if ( object instanceof THREE.CSS3DObject ) {
 
 			var style;
@@ -263,7 +264,7 @@ THREE.CSS3DStereoRenderer = function () {
 		var fov = 0.5 / Math.tan( THREE.Math.degToRad( camera.fov * 0.5 ) ) * _height;
 
 		// Left
-		
+
 		_cameraL.fov = camera.fov;
 		_cameraL.aspect = 0.5 * camera.aspect;
 		_cameraL.updateProjectionMatrix();

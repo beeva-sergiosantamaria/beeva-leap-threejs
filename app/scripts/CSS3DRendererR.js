@@ -3,45 +3,7 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE.CSS3DObject = function ( element ) {
-
-	THREE.Object3D.call( this );
-
-	this.element = element;
-	this.element.style.position = 'absolute';
-
-	this.addEventListener( 'removed', function ( event ) {
-
-		if ( this.element.parentNode !== null ) {
-
-			this.element.parentNode.removeChild( this.element );
-
-			for ( var i = 0, l = this.children.length; i < l; i ++ ) {
-
-				this.children[ i ].dispatchEvent( event );
-
-			}
-
-		}
-
-	} );
-
-};
-
-
-THREE.CSS3DObject.prototype = Object.create( THREE.Object3D.prototype );
-
-THREE.CSS3DSprite = function ( element ) {
-
-	THREE.CSS3DObject.call( this, element );
-
-};
-
-THREE.CSS3DSprite.prototype = Object.create( THREE.CSS3DObject.prototype );
-
-//
-
-THREE.CSS3DRenderer = function () {
+THREE.CSS3DRendererR = function () {
 
 	console.log( 'THREE.CSS3DRenderer', THREE.REVISION );
 
@@ -180,16 +142,13 @@ THREE.CSS3DRenderer = function () {
 			element.style.transform = style;
 
 			if ( element.parentNode !== cameraElement ) {
-
 				cameraElement.appendChild( element );
 
 			}
 
 		}
-
-		for ( var i = 0, l = object.children.length / 2; i < l; i ++ ) {
-			renderObject( object.children[ i ], camera );
-
+		for ( var i = object.children.length / 2, l = object.children.length; i < l; i ++ ) {
+			renderObject( object.children[ i], camera );
 		}
 
 	};
