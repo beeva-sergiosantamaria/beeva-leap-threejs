@@ -8,7 +8,7 @@ angular.module('pruebaApp')
     var DISTRICTS = { "28032":"Vicálvaro", "28033":"Pinar del Rey", "28034":"Fuencarral - El Pardo", "28035":"Mirasierra", "28036":"Chamartín - Plaza Castilla", "28037":"San Blas", "28038":"Puente de Vallecas", "28039":"Tetuán", "28040":"Moncloa", "28041":"Ciudad de los Ángeles", "28042":"Barrio del Aeropuerto", "28043":"Hortaleza", "28044":"Barrio de la Fortuna", "28045":"Arganzuela", "28046":"Paseo de la Castellana", "28047":"Latina", "28048":"Fuencarral", "28049":"Montecarmelo", "28050":"Sanchinarro", "28051":"Vallecas", "28052":"Vicálvaro Industrial", "28053":"Puente de Vallecas", "28054":"Carabanchel - La Peseta", "28001":"Salamanca", "28002":"Prosperidad", "28003":"Valverde", "28004":"Chueca", "28005":"Barrio de la Latina", "28006":"Salamanca Norte", "28007":"Retiro", "28008":"Parque del Oeste", "28009":"Ibiza", "28010":"Chamberí", "28011":"Casa de Campo", "28012":"Barrio de las Letras", "28013":"Barrio de los Austrias", "28014":"Parque del Retiro", "28015":"Malasaña", "28016":"Chamartín", "28017":"Pueblo Nuevo", "28018":"Palomeras - Vallecas", "28019":"San Isidro", "28020":"Santiago Bernabéu", "28021":"Villaverde Alto", "28022":"Canillejas", "28023":"Majadahonda", "28024":"Campamento", "28025":"Carabanchel - Vista Alegre", "28026":"Usera", "28027":"Quintana", "28028":"Ciudad Lineal", "28029":"Barrio del Pilar", "28030":"Moratalaz", "28031":"Villa de Vallecas" };
     var camera, scene, renderer,rendererR;
     var deviceControls, cameraControls, controls;
-    var indexPointer = 0;
+    var indexPointe = 0;
 
     var categorias = [];
     var objects = [];
@@ -39,7 +39,6 @@ angular.module('pruebaApp')
 
     buttons.push($("#grupos"));
     buttons.push($("#capas"));
-    buttons.push($("#esferas"));
     buttons.push($("#helices"));
     buttons.push($("#enlace"));
     buttons.push($("#fullscreentoggle"));
@@ -58,22 +57,7 @@ angular.module('pruebaApp')
       //controls.addEventListener( 'change', render );
 
 
-      cameraControls = new THREE.LeapCameraControls(camera);
-      cameraControls.rotateEnabled  = true;
-      cameraControls.rotateSpeed    = 2;
-      cameraControls.rotateHands    = 1;
-      cameraControls.rotateFingers  = [2, 3];
-
-      cameraControls.zoomEnabled    = true;
-      cameraControls.zoomSpeed      = 3;
-      cameraControls.zoomHands      = 2;
-      cameraControls.zoomFingers    = [6, 10];
-
-      cameraControls.panEnabled     = true;
-      cameraControls.panSpeed       = 2;
-      cameraControls.panHands       = 1;
-      cameraControls.panFingers     = [4, 5];
-      cameraControls.panRightHanded = false;
+      cameraControls = new THREE.LeapBeevaControls(camera);
 
       if (window.DeviceOrientationEvent && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         console.error("Oriented device");
