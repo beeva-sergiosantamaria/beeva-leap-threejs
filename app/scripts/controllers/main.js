@@ -8,7 +8,7 @@ angular.module('pruebaApp')
     var DISTRICTS = { "28032":"Vicálvaro", "28033":"Pinar del Rey", "28034":"Fuencarral - El Pardo", "28035":"Mirasierra", "28036":"Chamartín - Plaza Castilla", "28037":"San Blas", "28038":"Puente de Vallecas", "28039":"Tetuán", "28040":"Moncloa", "28041":"Ciudad de los Ángeles", "28042":"Barrio del Aeropuerto", "28043":"Hortaleza", "28044":"Barrio de la Fortuna", "28045":"Arganzuela", "28046":"Paseo de la Castellana", "28047":"Latina", "28048":"Fuencarral", "28049":"Montecarmelo", "28050":"Sanchinarro", "28051":"Vallecas", "28052":"Vicálvaro Industrial", "28053":"Puente de Vallecas", "28054":"Carabanchel - La Peseta", "28001":"Salamanca", "28002":"Prosperidad", "28003":"Valverde", "28004":"Chueca", "28005":"Barrio de la Latina", "28006":"Salamanca Norte", "28007":"Retiro", "28008":"Parque del Oeste", "28009":"Ibiza", "28010":"Chamberí", "28011":"Casa de Campo", "28012":"Barrio de las Letras", "28013":"Barrio de los Austrias", "28014":"Parque del Retiro", "28015":"Malasaña", "28016":"Chamartín", "28017":"Pueblo Nuevo", "28018":"Palomeras - Vallecas", "28019":"San Isidro", "28020":"Santiago Bernabéu", "28021":"Villaverde Alto", "28022":"Canillejas", "28023":"Majadahonda", "28024":"Campamento", "28025":"Carabanchel - Vista Alegre", "28026":"Usera", "28027":"Quintana", "28028":"Ciudad Lineal", "28029":"Barrio del Pilar", "28030":"Moratalaz", "28031":"Villa de Vallecas" };
     var camera, scene, renderer,rendererR;
     var deviceControls, cameraControls, controls;
-    var indexPointe = 0;
+    var indexPointer = 0;
 
     var categorias = [];
     var objects = [];
@@ -29,10 +29,10 @@ angular.module('pruebaApp')
     function animate() {
       requestAnimationFrame( animate );
       cameraControls.update(leapController.frame());
-      controls.update();
+      //controls.update();
       if(deviceControls)
         deviceControls.update();
-      showCursor(leapController.frame());
+      leapEvents(leapController.frame());
       TWEEN.update();
       render();
     }
@@ -52,8 +52,8 @@ angular.module('pruebaApp')
       controls = new THREE.TrackballControls( camera );
 
       controls.rotateSpeed = 0.1;
-      controls.zoomSpeed = 0.4;
-      controls.panSpeed = 0.2;
+      controls.zoomSpeed = 0.1;
+      controls.panSpeed = 0.1;
       //controls.addEventListener( 'change', render );
 
 
@@ -392,26 +392,54 @@ angular.module('pruebaApp')
       return [x, y];
     }
 
-    function showCursor(frame) {
+    function getFingers(frame){
       var hl = frame.hands.length;
       var fl = frame.pointables.length;
       var fls = 0;
       frame.pointables.forEach(function(item){
         if(item.extended) fls++;
       });
-      if (hl == 1 && fls == 1) {
-        var f = frame.pointables[0];
+      return fls;
+    }
+
+    function getCoordinatesFromHand(frame){
+      var hl = frame.hands.length;
+      if (hl >= 1) {
+        var hand = frame.hands[0];
         var cont = $(renderer.domElement);
-        var offset = cont.offset();
-        var coords = transform(f.tipPosition, cont.width(), cont.height());
-        intersections(frame, coords);
+        var coords = transform(hand.palmPosition, cont.width(), cont.height());
+        return coords;
+      }
+      return [0,0];
+    }
+
+      function getCoordinatesFromTip(frame){
+        var hl = frame.hands.length;
+        var fl = frame.pointables.length;
+        if (hl >= 1 && fl >= 1) {
+          var f = frame.pointables[0];
+          var cont = $(renderer.domElement);
+          var coords = transform(f.tipPosition, cont.width(), cont.height());
+          return coords;
+        }
+        return [0,0];
+      }
+
+    function leapEvents(frame) {
+      var fingers = getFingers(frame);;
+      var coords = getCoordinatesFromHand(frame);
+      var coordsTip = getCoordinatesFromTip(frame);
+      var cont = $(renderer.domElement);
+      var offset = cont.offset();
+      if (fingers == 1) {
+        $("#cursor").css('left', offset.left + coordsTip[0] - (($("#cursor").width() - 1)/2 + 1));
+        $("#cursor").css('top', offset.top + coordsTip[1] - (($("#cursor").height() - 1)/2 + 1));
+      } else {
         $("#cursor").css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
         $("#cursor").css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
-      } else {
-        $("#cursor").css('left', -1000);
-        $("#cursor").css('top', -1000);
       };
     }
+
 
     function toggleFullscreen(){
       if ((document.fullScreenElement && document.fullScreenElement !== null) ||
