@@ -32,7 +32,7 @@ angular.module('pruebaApp')
       controls.update();
       if(deviceControls)
         deviceControls.update();
-      showCursor(leapController.frame());
+      leapEvents(leapController.frame());
       TWEEN.update();
       render();
     }
@@ -52,27 +52,10 @@ angular.module('pruebaApp')
 
       controls = new THREE.TrackballControls( camera );
 
-      controls.rotateSpeed = 0.1;
       controls.zoomSpeed = 0.4;
       controls.panSpeed = 0.2;
 
-
-      cameraControls = new THREE.LeapCameraControls(camera);
-      cameraControls.rotateEnabled  = true;
-      cameraControls.rotateSpeed    = 2;
-      cameraControls.rotateHands    = 1;
-      cameraControls.rotateFingers  = [2, 3];
-
-      cameraControls.zoomEnabled    = true;
-      cameraControls.zoomSpeed      = 2;
-      cameraControls.zoomHands      = 2;
-      cameraControls.zoomFingers    = [6, 10];
-
-      cameraControls.panEnabled     = true;
-      cameraControls.panSpeed       = 2;
-      cameraControls.panHands       = 1;
-      cameraControls.panFingers     = [4, 5];
-      cameraControls.panRightHanded = false;
+      cameraControls = new THREE.LeapBeevaControls(camera);
 
       if (window.DeviceOrientationEvent && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         console.error("Oriented device");
@@ -176,7 +159,6 @@ angular.module('pruebaApp')
       d3.select("input[value=\"grouped\"]").property("checked", true).each(change);
     }, 2000);
 
-    console.log(CPS);
     function addData(howMany){
       if(indexPointer + howMany > CPS.length)
         return;
@@ -411,26 +393,54 @@ angular.module('pruebaApp')
       return [x, y];
     }
 
-    function showCursor(frame) {
+    function getFingers(frame){
       var hl = frame.hands.length;
       var fl = frame.pointables.length;
       var fls = 0;
       frame.pointables.forEach(function(item){
         if(item.extended) fls++;
       });
-      if (hl == 1 && fls == 1) {
-        var f = frame.pointables[0];
+      return fls;
+    }
+
+    function getCoordinatesFromHand(frame){
+      var hl = frame.hands.length;
+      if (hl >= 1) {
+        var hand = frame.hands[0];
         var cont = $(renderer.domElement);
-        var offset = cont.offset();
-        var coords = transform(f.tipPosition, cont.width(), cont.height());
-        intersections(frame, coords);
+        var coords = transform(hand.palmPosition, cont.width(), cont.height());
+        return coords;
+      }
+      return [0,0];
+    }
+
+      function getCoordinatesFromTip(frame){
+        var hl = frame.hands.length;
+        var fl = frame.pointables.length;
+        if (hl >= 1 && fl >= 1) {
+          var f = frame.pointables[0];
+          var cont = $(renderer.domElement);
+          var coords = transform(f.tipPosition, cont.width(), cont.height());
+          return coords;
+        }
+        return [0,0];
+      }
+
+    function leapEvents(frame) {
+      var fingers = getFingers(frame);;
+      var coords = getCoordinatesFromHand(frame);
+      var coordsTip = getCoordinatesFromTip(frame);
+      var cont = $(renderer.domElement);
+      var offset = cont.offset();
+      if (fingers == 1) {
+        $("#cursor").css('left', offset.left + coordsTip[0] - (($("#cursor").width() - 1)/2 + 1));
+        $("#cursor").css('top', offset.top + coordsTip[1] - (($("#cursor").height() - 1)/2 + 1));
+      } else {
         $("#cursor").css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
         $("#cursor").css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
-      } else {
-        $("#cursor").css('left', -1000);
-        $("#cursor").css('top', -1000);
       };
     }
+
 
     function toggleFullscreen(){
       if ((document.fullScreenElement && document.fullScreenElement !== null) ||
