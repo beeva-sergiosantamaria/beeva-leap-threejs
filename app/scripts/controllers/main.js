@@ -19,7 +19,7 @@ angular.module('pruebaApp')
     init();
 
     var leapController = new Leap.Controller({
-      optimizeHMD: false,
+      optimizeHMD: true,
       enableGestures: false
     });
     leapController.connect();
@@ -76,6 +76,10 @@ angular.module('pruebaApp')
       document.getElementById( 'container' ).appendChild( rendererR.domElement );
 
       controls.addEventListener( 'change', render );
+
+      document.onclick = function(){
+        toggleFullscreen();
+      };
 
       scene = new THREE.Scene();
 
@@ -380,7 +384,7 @@ angular.module('pruebaApp')
       rendererR.render( scene, camera );
     }
 
-    function transform(tipPosition, w, h) {
+    function transformOld(tipPosition, w, h) {
       var width = 150;
       var height = 150;
       var minHeight = 100;
@@ -393,9 +397,19 @@ angular.module('pruebaApp')
       return [x, y];
     }
 
+    function transform(tipPosition, w, h) {
+      var width = 150;
+      var height = 150;
+      var ftx = -tipPosition[0];
+      var ftz = tipPosition[2];
+      ftx = (ftx > width ? width - 1 : (ftx < -width ? -width + 1 : ftx));
+      ftz = (ftz > height ? height - 1 : (ftz < -height ? -height + 1 : ftz));
+      var x = THREE.Math.mapLinear(ftx, -width, width, 0, w);
+      var z = THREE.Math.mapLinear(ftz, -height, height, 0, h);
+      return [x, z];
+    }
+
     function getFingers(frame){
-      var hl = frame.hands.length;
-      var fl = frame.pointables.length;
       var fls = 0;
       frame.pointables.forEach(function(item){
         if(item.extended) fls++;
@@ -433,8 +447,8 @@ angular.module('pruebaApp')
       var cont = $(renderer.domElement);
       var offset = cont.offset();
       if (fingers == 1) {
-        $("#cursor").css('left', offset.left + coordsTip[0] - (($("#cursor").width() - 1)/2 + 1));
-        $("#cursor").css('top', offset.top + coordsTip[1] - (($("#cursor").height() - 1)/2 + 1));
+        $("#cursor").css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
+        $("#cursor").css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
       } else {
         $("#cursor").css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
         $("#cursor").css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
