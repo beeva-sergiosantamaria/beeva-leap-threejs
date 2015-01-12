@@ -16,6 +16,27 @@ angular.module('pruebaApp')
     var actualTargets;
     var buttons = [];
 
+    var voiceEngine = new VoiceEngine();
+
+    voiceEngine.addAction(new VoiceAction("agrupados", function(){
+      console.log("Event for agrupados");
+    }));
+    voiceEngine.addAction(new VoiceAction("apilados", function(){
+      console.log("Event for apilados");
+    }));
+    voiceEngine.addAction(new VoiceAction("ingresos", function(){
+      console.log("ingresos");
+    }));
+    voiceEngine.addAction(new VoiceAction("pagos", function(){
+      console.log("eventos pagos");
+    }));
+    voiceEngine.addAction(new VoiceAction("tarjetas usadas", function(){
+      console.log("tarjetas usadas");
+    }));
+
+    voiceEngine.start();
+
+
     init();
 
     var leapController = new Leap.Controller({
@@ -61,6 +82,10 @@ angular.module('pruebaApp')
         console.error("Oriented device");
         deviceControls = new THREE.DeviceOrientationControls(camera);
         deviceControls.connect();
+
+        document.onclick = function(){
+          toggleFullscreen();
+        };
       }
 
       renderer = new THREE.CSS3DRenderer({});
@@ -77,9 +102,6 @@ angular.module('pruebaApp')
 
       controls.addEventListener( 'change', render );
 
-      document.onclick = function(){
-        toggleFullscreen();
-      };
 
       scene = new THREE.Scene();
 
