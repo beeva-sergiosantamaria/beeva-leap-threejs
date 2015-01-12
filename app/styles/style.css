@@ -43,29 +43,29 @@ a:hover {
 
 #menuFiltros {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 100px;
+  left: 40px;
   width: 100%;
   text-align: left;
 }
 #menuFull {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 100px;
+  right: 40px;
   width: 100%;
   text-align: right;
 }
 #menuFiltros2 {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 100px;
+  left: 40px;
   width: 100%;
   text-align: left;
 }
 #menu {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 100px;
+  right: 40px;
   width: 100%;
   text-align: right;
 }
@@ -89,13 +89,13 @@ text {
 }
 #menu2 {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 100px;
+  right: 40px;
   width: 100%;
   text-align: right;
 }
 
-.element {
+.elementos {
   width: 800px;
   height: 600px;
   box-shadow: 0px 0px 12px rgba(117,124,245,0.5);
@@ -104,12 +104,12 @@ text {
   cursor: default;
 }
 
-.element:hover {
+.elementos:hover {
   box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
   border: 5px solid rgba(127,255,255,0.75);
 }
 
-.element .number {
+.elementos .number {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -117,7 +117,7 @@ text {
   color: rgba(127,255,255,0.75);
 }
 
-.element .symbol {
+.elementos .distrito {
   position: relative;
   float: right;
   display: inline-block;
@@ -129,7 +129,7 @@ text {
   text-shadow: 0 0 10px rgba(0,255,255,0.95);
 }
 
-.element .details {
+.elementos .detalles {
   position: absolute;
   bottom: 15px;
   left: 0px;
@@ -138,7 +138,7 @@ text {
   color: rgba(127,255,255,0.75);
 }
 
-.element .leyenda {
+.elementos .leyenda {
   float: left;
   position: relative;
   top: 0px;
