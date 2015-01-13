@@ -334,7 +334,8 @@ angular.module('pruebaApp')
     function transform(tipPosition, w, h) {
       var width = 150;
       var height = 150;
-      var ftx = -tipPosition[0];
+      // Inverse Axis for HMD
+      var ftx = tipPosition[0];
       var ftz = tipPosition[2];
       ftx = (ftx > width ? width - 1 : (ftx < -width ? -width + 1 : ftx));
       ftz = (ftz > height ? height - 1 : (ftz < -height ? -height + 1 : ftz));
@@ -387,6 +388,36 @@ angular.module('pruebaApp')
         $("#cursor").css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
         $("#cursor").css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
       };
+
+      if(coords[0] > 0){
+        var leftCords = [coords[0],  coords[1]/2];
+        checkIntersections(fingers, leftCords);
+      }
+
+    }
+
+    var lastId;
+    var iterations;
+    function checkIntersections(fingers, coords){
+      var elem = $(document.elementFromPoint(coords[0],coords[1])).parents(".elementos");
+      //var elem = $.touching({x: coords[0], y: coords[1]}, '.elementos');
+      if(elem && elem.length > 0 && fingers > 2 && fingers < 5){
+        var id = elem[0].id;
+        if(lastId === id){
+          iterations += 1;
+          if(iterations > 50){
+            //TODO do something with the postal code!!!
+            alert(lastId);
+            iterations = 0;
+          }
+        }
+        else{
+          lastId = id;
+          iterations = 0;
+
+        }
+      }
+
     }
 
 
