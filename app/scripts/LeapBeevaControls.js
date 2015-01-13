@@ -2,7 +2,7 @@
  * @author Torsten Sprenger / http://torstensprenger.com
  *
  * Leap Camera Controls (http://leapmotion.com)
- * 
+ *
  */
 
 THREE.LeapBeevaControls = function(camera) {
@@ -26,13 +26,13 @@ THREE.LeapBeevaControls = function(camera) {
   this.rotateEnabled       = false;
   this.rotateSpeed         = 1.0;
   this.rotateHands         = 1;
-  this.rotateFingers       = [2, 3]; 
+  this.rotateFingers       = [2, 3];
   this.rotateRightHanded   = true;
   this.rotateHandPosition  = true;
   this.rotateStabilized    = false;
   this.rotateMin           = 0;
   this.rotateMax           = Math.PI;
-  
+
   // zoom
   this.zoomEnabled         = true;
   this.zoomSpeed           = 3.5;
@@ -41,9 +41,11 @@ THREE.LeapBeevaControls = function(camera) {
   this.zoomRightHanded     = true;
   this.zoomHandPosition    = true;
   this.zoomStabilized      = false;
-  this.zoomMin             = _this.camera.near;
-  this.zoomMax             = _this.camera.far;
-  
+  //this.zoomMin             = _this.camera.near;
+  this.zoomMin             = 0;
+  //this.zoomMax             = _this.camera.far;
+  this.zoomMax             = Infinity;
+
   // pan
   this.panEnabled          = false;
   this.panSpeed            = 1.0;
@@ -52,7 +54,7 @@ THREE.LeapBeevaControls = function(camera) {
   this.panRightHanded      = true;
   this.panHandPosition     = true;
   this.panStabilized       = false;
-  
+
   // internals
   var _rotateXLast         = null;
   var _rotateYLast         = null;
@@ -192,20 +194,20 @@ THREE.LeapBeevaControls = function(camera) {
     switch(action) {
       case 'rotate':
         h = _this.hand(frame, 'rotate');
-        return (_this.rotateHandPosition 
-          ? (_this.rotateStabilized ? h.stabilizedPalmPosition : h.palmPosition) 
+        return (_this.rotateHandPosition
+          ? (_this.rotateStabilized ? h.stabilizedPalmPosition : h.palmPosition)
           : (_this.rotateStabilized ? frame.pointables[0].stabilizedTipPosition : frame.pointables[0].tipPosition)
         );
       case 'zoom':
         h = _this.hand(frame, 'zoom');
-        return (_this.zoomHandPosition 
-          ? (_this.zoomStabilized ? h.stabilizedPalmPosition : h.palmPosition) 
+        return (_this.zoomHandPosition
+          ? (_this.zoomStabilized ? h.stabilizedPalmPosition : h.palmPosition)
           : (_this.zoomStabilized ? frame.pointables[0].stabilizedTipPosition : frame.pointables[0].tipPosition)
         );
       case 'pan':
         h = _this.hand(frame, 'pan');
         return (_this.panHandPosition
-          ? (_this.panStabilized ? h.stabilizedPalmPosition : h.palmPosition) 
+          ? (_this.panStabilized ? h.stabilizedPalmPosition : h.palmPosition)
           : (_this.panStabilized ? frame.pointables[0].stabilizedTipPosition : frame.pointables[0].tipPosition)
         );
     };
@@ -224,7 +226,7 @@ THREE.LeapBeevaControls = function(camera) {
       if (_this.rotateMin < newAngle && newAngle < _this.rotateMax) {
         var n = new THREE.Vector3(t.z, 0, -t.x).normalize();
         var matrixX = new THREE.Matrix4().makeRotationAxis(n, angleDelta);
-        _this.camera.position = t.applyMatrix4(matrixX).add(_this.target); // rotate and translate back        
+        _this.camera.position = t.applyMatrix4(matrixX).add(_this.target); // rotate and translate back
       };
 
       // rotate around y-axis translated by target vector
@@ -234,16 +236,16 @@ THREE.LeapBeevaControls = function(camera) {
       var matrixY = new THREE.Matrix4().makeRotationY(-_this.rotateTransform(xDelta));
       _this.camera.position.sub(_this.target).applyMatrix4(matrixY).add(_this.target); // translate, rotate and translate back
       _this.camera.lookAt(_this.target);
-      
+
       _rotateYLast = y;
       _rotateXLast = x;
       _zoomZLast   = null;
       _panXLast    = null;
       _panYLast    = null;
-      _panZLast    = null;      
+      _panZLast    = null;
     } else {
       _rotateYLast = null;
-      _rotateXLast = null;      
+      _rotateXLast = null;
     };
   };
 
@@ -257,17 +259,17 @@ THREE.LeapBeevaControls = function(camera) {
       newLength = t.length() - lengthDelta;
       if (_this.zoomMin < newLength && newLength < _this.zoomMax) {
         t.normalize().multiplyScalar(lengthDelta);
-        _this.camera.position.sub(t);        
+        _this.camera.position.sub(t);
       };
 
-      _zoomZLast   = z; 
+      _zoomZLast   = z;
       _rotateXLast = null;
       _rotateYLast = null;
       _panXLast    = null;
       _panYLast    = null;
       _panZLast    = null;
     } else {
-      _zoomZLast = null; 
+      _zoomZLast = null;
     };
   };
 
@@ -298,7 +300,7 @@ THREE.LeapBeevaControls = function(camera) {
     } else {
       _panXLast = null;
       _panYLast = null;
-      _panZLast = null;     
+      _panZLast = null;
     };
   };
 

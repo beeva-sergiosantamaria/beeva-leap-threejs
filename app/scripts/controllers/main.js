@@ -49,6 +49,7 @@ angular.module('pruebaApp')
 
       controls.zoomSpeed = 0.4;
       controls.panSpeed = 0.2;
+      controls.staticMoving = true;
 
       cameraControls = new THREE.LeapBeevaControls(camera);
 
@@ -230,9 +231,9 @@ angular.module('pruebaApp')
 
         var object = new THREE.Object3D();
 
-        object.position.x = 170 * (Math.pow((CPS[i].año - 2010),3)) * Math.sin( phi );
+        object.position.x = 175 * (Math.pow((CPS[i].año - 2010),3)) * Math.sin( phi );
         object.position.y = (Math.pow((CPS[i].año - 2010),3));
-        object.position.z = 170 * (Math.pow((CPS[i].año - 2010),3)) * Math.cos( phi );//100 * (Math.pow((CPS[i].año - 2010),4))
+        object.position.z = 175 * (Math.pow((CPS[i].año - 2010),3)) * Math.cos( phi );//100 * (Math.pow((CPS[i].año - 2010),4))
 
         vector.x = object.position.x * - 2;
         vector.y = object.position.y;
