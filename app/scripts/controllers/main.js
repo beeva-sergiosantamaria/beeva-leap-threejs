@@ -442,12 +442,26 @@ angular.module('pruebaApp')
 
     }
 
-
+    var lastId;
+    var iterations;
     function checkIntersections(fingers, coords){
       var elem = $(document.elementFromPoint(coords[0],coords[1])).parents(".elementos");
       //var elem = $.touching({x: coords[0], y: coords[1]}, '.elementos');
-      if(elem && elem.length > 0){
-        console.error(DISTRICTS[elem[0].id]);
+      if(elem && elem.length > 0 && fingers > 2 && fingers < 5){
+        var id = elem[0].id;
+        if(lastId === id){
+          iterations += 1;
+          if(iterations > 50){
+            //TODO do something with the postal code!!!
+            alert(lastId);
+            iterations = 0;
+          }
+        }
+        else{
+          lastId = id;
+          iterations = 0;
+
+        }
       }
 
     }
