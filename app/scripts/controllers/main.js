@@ -23,7 +23,6 @@ angular.module('pruebaApp')
 
     voiceEngine.start();
 
-
     init();
 
     var leapController = new Leap.Controller({
@@ -208,19 +207,10 @@ angular.module('pruebaApp')
         elementos.appendChild(detalles);
 
         var object = new THREE.CSS3DObject(elementos);
-        object.position.x = Math.random() * 4000 - 2000;
-        object.position.y = Math.random() * 4000 - 2000;
-        object.position.z = Math.random() * 4000 - 2000;
+
         scene.add(object);
 
         objects.push(object);
-
-        var object = new THREE.Object3D();
-        object.position.x = Math.random() * 4000 - 2000;
-        object.position.y = Math.random() * 4000 - 2000;
-        object.position.z = Math.random() * 4000 - 2000;
-
-        targets.grupo.push(object);
 
       }
       // helice
@@ -268,13 +258,12 @@ angular.module('pruebaApp')
       if(actualTargets) {
         transformar(actualTargets, 2000);
       }
-
     }
 
-    //voiceEngine.addAction(new VoiceAction("agrupados", function(){
-    //  console.log("Event for agrupados");
-    //  change();
-    //}));
+    voiceEngine.addAction(new VoiceAction("agrupados", function(){
+      console.log("Event for agrupados");
+      //change();
+    }));
     voiceEngine.addAction(new VoiceAction("apilados", function(){
       console.log("Event for apilados");
     }));
@@ -303,51 +292,6 @@ angular.module('pruebaApp')
       aux = aux.substring(0, aux.length - 3);
       return aux;
     }
-
-    //d3.selectAll("input").on("change", change);
-    //
-    //var timeout = setTimeout(function() {
-    //  d3.select("input[value=\"grouped\"]").property("checked", true).each(change);
-    //}, 2000);
-
-    var button = document.getElementById( 'fullscreentoggle' );
-    button.addEventListener( 'click', function ( event ) {
-      event.preventDefault();
-      transitionStacked();
-    }, false );
-
-    //function change() {
-    //  clearTimeout(timeout);
-    //  if (this.value === "grouped") transitionGrouped();
-    //  else transitionStacked();
-    //}
-    //
-    //function transitionGrouped() {
-    //  y.domain([0, yGroupMax]);
-    //
-    //  rect.transition()
-    //    .duration(500)
-    //    .delay(function(d, i) { return i * 10; })
-    //    .attr("x", function(d, i, j) { return x(d.x) + x.rangeBand() / n * j; })
-    //    .attr("width", x.rangeBand() / n)
-    //    .transition()
-    //    .attr("y", function(d) { return y(d.y); })
-    //    .attr("height", function(d) { return height - y(d.y); });
-    //}
-    //
-    //function transitionStacked() {
-    //  y.domain([0, yStackMax]);
-    //
-    //  rect.transition()
-    //    .duration(500)
-    //    .delay(function(d, i) { return i * 10; })
-    //    .attr("y", function(d) { return y(d.y0 + d.y); })
-    //    .attr("height", function(d) { return y(d.y0) - y(d.y0 + d.y); })
-    //    .transition()
-    //    .attr("x", function(d) { return x(d.x); })
-    //    .attr("width", x.rangeBand());
-    //}
-
     function onWindowResize() {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -358,11 +302,21 @@ angular.module('pruebaApp')
       render();
 
     }
-
     function render() {
       renderer.render( scene, camera );
       rendererR.render( scene, camera );
     }
+    //
+    //$(document).on('click', '.nv-series', function() {
+    //  console.log("lolololo");
+    //  this.stacked(false);
+    //});
+    //
+    //var button = document.getElementById( 'fullscreentoggle' );
+    //button.addEventListener( 'click', function ( event ) {
+    //  event.preventDefault();
+    //  //.stacked(false);
+    //}, false );
 
     function transformOld(tipPosition, w, h) {
       var width = 150;
@@ -483,7 +437,6 @@ angular.module('pruebaApp')
 
       });
     }
-
     function checkMouseCollision(x, y, elementos) {
       var objX = elementos.offset().left;
       var objY = elementos.offset().top - 25;
