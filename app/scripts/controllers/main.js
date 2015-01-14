@@ -308,42 +308,23 @@ angular.module('pruebaApp')
     }));
 
     function leapEvents(frame) {
-      var fingers = getFingers(frame);;
-      var coords = getCoordinatesFromHand(frame);
-      var coordsTip = getCoordinatesFromTip(frame);
-      var cursor = $("#cursor");
+      // Dedos apuntando
+      var fingers = getFingers(frame);
 
-      // Si no se esta interactuando con el Leap, eliminamos el cursor de la pantalla
-      if(fingers == 0 && coords[0] == 0) {
-        cursor.css('left', -1000);
-        cursor.css('top', -1000);
-        cursor.empty();
-        return;
-      }
+      var container = $(renderer.domElement);
 
-      var cont = $(renderer.domElement);
-      var offset = cont.offset();
+      // Coordenadas de la mano y del dedo índice
+      var coords = getCoordinatesFromHand(frame, container);
+      var coordsTip = getCoordinatesFromTip(frame, container);
 
-      cursor.css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
-      cursor.css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
+      // Mostrar el cursor/dedos/mano en pantalla, o no...
+      showCursorInScreen(fingers, coords, container);
 
-      cursor.empty();
-      if (fingers == 0)
-        cursor.html("<img class=\"indicadores\" src=\"images/nodedo.png\"></img>");
-      else if(fingers <= 1)
-        cursor.html("<img class=\"indicadores\" src=\"images/1dedo.png\"></img>");
-      else if(fingers <= 4){
-        cursor.html("<img class=\"indicadores\" src=\"images/3dedos.png\"></img><p style='color: #9EACD1'>seleccionar</p>");
-      }
-      else if(fingers <= 5){
-        cursor.html("<img class=\"indicadores\" src=\"images/5dedos.png\"></img><p style='color: #9EACD1'>zoom</p>");
-      }
       if(coords[0] > 0){
-        var leftCords = [coords[0]/1,  coords[1]];
-        checkIntersections(fingers, leftCords);
+        checkIntersections(fingers, coords);
       }
-
     }
+
     var lastId;
     var iterations;
     function checkIntersections(fingers, coords) {
@@ -354,8 +335,6 @@ angular.module('pruebaApp')
         if(lastId === id) {
           iterations += 1;
           if(iterations > 100){
-            //TODO do something with the postal code!!!
-            //alert(lastId);
             elem.addClass("selected");
             iterations = 0;
           }
