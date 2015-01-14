@@ -147,8 +147,10 @@ THREE.CSS3DRendererR = function () {
 			}
 
 		}
-		for ( var i = object.children.length / 2, l = object.children.length; i < l; i ++ ) {
-			renderObject( object.children[ i], camera );
+		for ( var i = 0, l = object.children.length; i < l; i ++ ) {
+      var obj = object.children[i];
+      if(obj.castShadow)
+        renderObject( obj, camera );
 		}
 
 	};
