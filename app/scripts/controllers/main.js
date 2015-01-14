@@ -21,11 +21,13 @@ angular.module('pruebaApp')
 
     var voiceEngine = new VoiceEngine();
 
-    voiceEngine.start();
+    //voiceEngine.start();
 
     init();
 
     var leapController = new Leap.Controller({
+      host:'192.168.11.126',
+      port:6437,
       optimizeHMD: true,
       enableGestures: false
     });
@@ -37,8 +39,8 @@ angular.module('pruebaApp')
       requestAnimationFrame( animate );
       cameraControls.update(leapController.frame());
       controls.update();
-      if(deviceControls)
-        deviceControls.update();
+      //if(deviceControls)
+      //  deviceControls.update();
       leapEvents(leapController.frame());
       TWEEN.update();
       render();
@@ -265,34 +267,7 @@ angular.module('pruebaApp')
         transformar(actualTargets, 2000, objects.length);
       }
     }
-    var lastId;
-    var iterations;
-    var cont = 0;
-    function checkIntersections(fingers, coords){
-      var elem = $(document.elementFromPoint(coords[0],coords[1])).parents(".elementos");
-      //var elem = $.touching({x: coords[0], y: coords[1]}, '.elementos');
-      if(elem && elem.length > 0 && fingers > 2 && fingers < 5){
-        var id = elem[0].id;
-        if(lastId === id){
-          iterations += 1;
-          console.log(iterations);
-          if(iterations > 60){
-            //TODO do something with the postal code!!!
-            alert(lastId);
-            detalles[cont] = lastId;
-            if(cont<3) cont += 1;
-            else cont = 0;
-            iterations = 0;
-            console.log(detalles);
-          }
-        }
-        else{
-          lastId = id;
-          iterations = 0;
 
-        }
-      }
-    }
     var button = document.getElementById( 'fullscreentoggle' );
     button.addEventListener( 'click', function ( event ) {
       event.preventDefault();
@@ -310,6 +285,7 @@ angular.module('pruebaApp')
       targets.capa.push(selecciones);
       transformar(targets.capa, 1000, selecciones.length);
     }, false );
+
     voiceEngine.addAction(new VoiceAction("agrupados", function(){
       console.log("Event for agrupados");
       //change();
@@ -356,12 +332,6 @@ angular.module('pruebaApp')
       renderer.render( scene, camera );
       rendererR.render( scene, camera );
     }
-    //
-    //$(document).on('click', '.nv-series', function() {
-    //  console.log("lolololo");
-    //  this.stacked(false);
-    //});
-    //
 
     function transformOld(tipPosition, w, h) {
       var width = 150;
@@ -386,7 +356,7 @@ angular.module('pruebaApp')
       ftz = (ftz > height ? height - 1 : (ftz < -height ? -height + 1 : ftz));
       var x = THREE.Math.mapLinear(ftx, -width, width, 0, w);
       var z = THREE.Math.mapLinear(ftz, -height, height, 0, h);
-      return [x, z];
+      return [x, z ];
     }
 
     function getFingers(frame){
@@ -424,23 +394,63 @@ angular.module('pruebaApp')
       var fingers = getFingers(frame);;
       var coords = getCoordinatesFromHand(frame);
       var coordsTip = getCoordinatesFromTip(frame);
+      var cursor = $("#cursor");
+
+      // Si no se esta interactuando con el Leap, eliminamos el cursor de la pantalla
+      if(fingers == 0 && coords[0] == 0) {
+        cursor.css('left', -1000);
+        cursor.css('top', -1000);
+        cursor.empty();
+        return;
+      }
+
       var cont = $(renderer.domElement);
       var offset = cont.offset();
-      if (fingers == 1) {
-        $("#cursor").css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
-        $("#cursor").css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
-      } else {
-        $("#cursor").css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
-        $("#cursor").css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
-      };
 
+      cursor.css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
+      cursor.css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
+
+      cursor.empty();
+      if (fingers == 0)
+        cursor.html("<img class=\"indicadores\" src=\"images/nodedo.png\"></img>");
+      else if(fingers <= 1)
+        cursor.html("<img class=\"indicadores\" src=\"images/1dedo.png\"></img>");
+      else if(fingers <= 4){
+        cursor.html("<img class=\"indicadores\" src=\"images/3dedos.png\"></img><p style='color: #9EACD1'>seleccionar</p>");
+      }
+      else if(fingers <= 5){
+        cursor.html("<img class=\"indicadores\" src=\"images/5dedos.png\"></img><p style='color: #9EACD1'>zoom</p>");
+      }
       if(coords[0] > 0){
-        var leftCords = [coords[0],  coords[1]/2];
+        var leftCords = [coords[0]/1,  coords[1]];
         checkIntersections(fingers, leftCords);
       }
 
     }
+    var lastId;
+    var iterations;
+    function checkIntersections(fingers, coords) {
+      var elem = $(document.elementFromPoint(coords[0],coords[1])).parents(".elementos");
+      //var elem = $.touching({x: coords[0], y: coords[1]}, '.elementos');
+      if(elem && elem.length > 0 && fingers >= 3 && fingers <= 4){
+        var id = elem[0].id;
+        if(lastId === id) {
+          iterations += 1;
+          if(iterations > 100){
+            //TODO do something with the postal code!!!
+            //alert(lastId);
+            elem.addClass("selected");
+            iterations = 0;
+          }
+        }
+        else{
+          lastId = id;
+          iterations = 0;
 
+        }
+      }
+
+    }
     function toggleFullscreen(){
       if ((document.fullScreenElement && document.fullScreenElement !== null) ||
           (!document.mozFullScreen && !document.webkitIsFullScreen)) {
