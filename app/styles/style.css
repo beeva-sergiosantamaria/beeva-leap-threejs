@@ -155,7 +155,7 @@ form {
   right: 10px;
   top: 10px;
 }
-#cursor {
+.cursor {
   position: absolute;
   left: -1000px;
   top: -1000px;
