@@ -18,7 +18,7 @@
 (function() {
 
 	var deviceOrientation = {};
-	var screenOrientation = window.orientation || 0;
+	var screenOrientation = window.orientation || 90;
 
 	function onDeviceOrientationChangeEvent(evt) {
 		deviceOrientation = evt;
@@ -32,9 +32,9 @@
 			case 'landscape-secondary':
 				return -90;
 			case 'portrait-secondary':
-				return 180;
+				return -90;
 			case 'portrait-primary':
-				return 0;
+				return 90;
 		}
 		// this returns 90 if width is greater then height
 		// and window orientation is undefined OR 0

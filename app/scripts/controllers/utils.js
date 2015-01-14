@@ -115,9 +115,17 @@ function showCursorInScreen(fingers, coords, container){
         cursor.html("<img class=\"indicadores\" src=\"images/1dedo.png\"></img>");
         cursorRight.html("<img class=\"indicadores\" src=\"images/1dedo.png\"></img>");
     }
-    else if(fingers <= 4){
+    else if(fingers <= 2){
+        cursor.html("<img class=\"indicadores\" src=\"images/2dedos.png\"></img>");
+        cursorRight.html("<img class=\"indicadores\" src=\"images/2dedos.png\"></img>");
+    }
+    else if(fingers <= 3){
         cursor.html("<img class=\"indicadores\" src=\"images/3dedos.png\"></img><p style='color: #9EACD1'>seleccionar</p>");
         cursorRight.html("<img class=\"indicadores\" src=\"images/3dedos.png\"></img><p style='color: #9EACD1'>seleccionar</p>");
+    }
+    else if(fingers <= 4){
+        cursor.html("<img class=\"indicadores\" src=\"images/4dedos.png\"></img><p style='color: #9EACD1'>seleccionar</p>");
+        cursorRight.html("<img class=\"indicadores\" src=\"images/4dedos.png\"></img><p style='color: #9EACD1'>seleccionar</p>");
     }
     else if(fingers <= 5){
         cursor.html("<img class=\"indicadores\" src=\"images/5dedos.png\"></img><p style='color: #9EACD1'>zoom</p>");

@@ -108,7 +108,8 @@ THREE.DeviceOrientationControls = function ( object, controls ) {
         var beta   = scope.deviceOrientation.beta  ? THREE.Math.degToRad( scope.deviceOrientation.beta  ) : 0; // X'
         var gamma  = scope.deviceOrientation.gamma ? THREE.Math.degToRad( scope.deviceOrientation.gamma ) : 0; // Y''
         var orient = scope.screenOrientation       ? THREE.Math.degToRad( scope.screenOrientation       ) : 0; // O
-        scope.object.quaternion = scope.setObjectQuaternionX( scope.object.quaternion, alpha, beta, gamma, orient );	scope.object.setRotationFromQuaternion(scope.object.quaternion);
+        scope.object.quaternion = scope.setObjectQuaternionX( scope.object.quaternion, alpha, beta, gamma, orient );
+        scope.object.setRotationFromQuaternion(scope.object.quaternion);
     };
 
 };

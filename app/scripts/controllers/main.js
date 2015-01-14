@@ -32,6 +32,7 @@ angular.module('pruebaApp')
       optimizeHMD: true,
       enableGestures: false
     });
+
     leapController.connect();
 
     animate();
@@ -40,8 +41,8 @@ angular.module('pruebaApp')
       requestAnimationFrame( animate );
       cameraControls.update(leapController.frame());
       controls.update();
-      //if(deviceControls)
-      //  deviceControls.update();
+      if(deviceControls)
+        deviceControls.update();
       leapEvents(leapController.frame());
       TWEEN.update();
       render();
@@ -76,12 +77,19 @@ angular.module('pruebaApp')
       renderer.setSize( window.innerWidth, window.innerHeight );
       renderer.domElement.style.position = 'relative';
       renderer.domElement.style.float = 'left';
+      renderer.domElement.style.float = 'left';
+      renderer.domElement.style.backgroundImage = "url(../textures/text7b.png)";
+      renderer.domElement.style.backgroundSize = "100% 100%";
+      renderer.domElement.style.backgroundRepeat = "no-repeat";
       document.getElementById( 'container' ).appendChild( renderer.domElement );
 
       rendererR = new THREE.CSS3DRendererR({});
       rendererR.setSize( window.innerWidth, window.innerHeight );
       rendererR.domElement.style.position = 'relative';
       rendererR.domElement.style.float = 'right';
+      rendererR.domElement.style.backgroundImage = "url(../textures/text7b.png)";
+      rendererR.domElement.style.backgroundSize = "100% 100%";
+      rendererR.domElement.style.backgroundRepeat = "no-repeat";
       document.getElementById( 'container' ).appendChild( rendererR.domElement );
 
       controls.addEventListener( 'change', render );
@@ -275,6 +283,7 @@ angular.module('pruebaApp')
         }
       }
       addData(selecciones.length);
+
       while (targets.capa.length>0){targets.capa.pop();}
       targets.capa.push(selecciones);
       transformar(objects, targets.capa, 1000, selecciones.length*2);
