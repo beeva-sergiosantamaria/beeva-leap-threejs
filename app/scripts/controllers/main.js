@@ -21,12 +21,14 @@ angular.module('pruebaApp')
 
     var voiceEngine = new VoiceEngine();
 
-    voiceEngine.start();
+    //voiceEngine.start();
 
 
     init();
 
     var leapController = new Leap.Controller({
+      host:'192.168.11.126',
+      port:6437,
       optimizeHMD: true,
       enableGestures: false
     });
@@ -38,8 +40,8 @@ angular.module('pruebaApp')
       requestAnimationFrame( animate );
       cameraControls.update(leapController.frame());
       controls.update();
-      if(deviceControls)
-        deviceControls.update();
+      //if(deviceControls)
+      //  deviceControls.update();
       leapEvents(leapController.frame());
       TWEEN.update();
       render();
@@ -387,7 +389,7 @@ angular.module('pruebaApp')
       ftz = (ftz > height ? height - 1 : (ftz < -height ? -height + 1 : ftz));
       var x = THREE.Math.mapLinear(ftx, -width, width, 0, w);
       var z = THREE.Math.mapLinear(ftz, -height, height, 0, h);
-      return [x, z];
+      return [x, z ];
     }
 
     function getFingers(frame){
@@ -425,18 +427,35 @@ angular.module('pruebaApp')
       var fingers = getFingers(frame);;
       var coords = getCoordinatesFromHand(frame);
       var coordsTip = getCoordinatesFromTip(frame);
+      var cursor = $("#cursor");
+
+      // Si no se esta interactuando con el Leap, eliminamos el cursor de la pantalla
+      if(fingers == 0 && coords[0] == 0) {
+        cursor.css('left', -1000);
+        cursor.css('top', -1000);
+        cursor.empty();
+        return;
+      }
+
       var cont = $(renderer.domElement);
       var offset = cont.offset();
-      if (fingers == 1) {
-        $("#cursor").css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
-        $("#cursor").css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
-      } else {
-        $("#cursor").css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
-        $("#cursor").css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
-      };
 
+      cursor.css('left', offset.left + coords[0] - (($("#cursor").width() - 1)/2 + 1));
+      cursor.css('top', offset.top + coords[1] - (($("#cursor").height() - 1)/2 + 1));
+
+      cursor.empty();
+      if (fingers == 0)
+        cursor.html("<img class=\"indicadores\" src=\"images/nodedo.png\"></img>");
+      else if(fingers <= 1)
+        cursor.html("<img class=\"indicadores\" src=\"images/1dedo.png\"></img>");
+      else if(fingers <= 4){
+        cursor.html("<img class=\"indicadores\" src=\"images/3dedos.png\"></img><p style='color: #9EACD1'>seleccionar</p>");
+      }
+      else if(fingers <= 5){
+        cursor.html("<img class=\"indicadores\" src=\"images/5dedos.png\"></img><p style='color: #9EACD1'>zoom</p>");
+      }
       if(coords[0] > 0){
-        var leftCords = [coords[0],  coords[1]/2];
+        var leftCords = [coords[0]/1,  coords[1]];
         checkIntersections(fingers, leftCords);
       }
 
@@ -444,16 +463,17 @@ angular.module('pruebaApp')
 
     var lastId;
     var iterations;
-    function checkIntersections(fingers, coords){
+    function checkIntersections(fingers, coords) {
       var elem = $(document.elementFromPoint(coords[0],coords[1])).parents(".elementos");
       //var elem = $.touching({x: coords[0], y: coords[1]}, '.elementos');
-      if(elem && elem.length > 0 && fingers > 2 && fingers < 5){
+      if(elem && elem.length > 0 && fingers >= 3 && fingers <= 4){
         var id = elem[0].id;
-        if(lastId === id){
+        if(lastId === id) {
           iterations += 1;
-          if(iterations > 50){
+          if(iterations > 100){
             //TODO do something with the postal code!!!
-            alert(lastId);
+            //alert(lastId);
+            elem.addClass("selected");
             iterations = 0;
           }
         }
