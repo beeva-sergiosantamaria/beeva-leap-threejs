@@ -36,6 +36,7 @@ function stream_layers(n, m, o, p) {
         a[i] = o * o * CPS[p].categories[i].sum_num_cards;
       }
     }
+
     for (i = 0; i < 5; i++) bump(a);
 
     val +=1;

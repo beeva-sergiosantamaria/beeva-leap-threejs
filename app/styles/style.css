@@ -63,8 +63,8 @@ a:hover {
 }
 #menu {
   position: absolute;
-  bottom: 40px;
-  right: 40px;
+  bottom: 10px;
+  left: 40px;
   width: 100%;
 }
 button {
@@ -213,4 +213,7 @@ form {
   height: 450px;
   margin-top: 100px;
   margin-left: 50px;
+}
+.ocultar{
+  display: none;
 }
