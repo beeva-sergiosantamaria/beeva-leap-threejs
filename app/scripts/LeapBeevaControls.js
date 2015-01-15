@@ -42,7 +42,7 @@ THREE.LeapBeevaControls = function(camera) {
   this.zoomHandPosition    = true;
   this.zoomStabilized      = false;
   //this.zoomMin             = _this.camera.near;
-  this.zoomMin             = -10000;
+  this.zoomMin             = 0;
   //this.zoomMax             = _this.camera.far;
   this.zoomMax             = Infinity;
 
