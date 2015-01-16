@@ -43,7 +43,7 @@ function transform(tipPosition, w, h) {
     var width = 150;
     var height = 150;
     // Inverse Axis for HMD
-    var ftx = tipPosition[0];
+    var ftx = -tipPosition[0];
     var ftz = tipPosition[2];
     ftx = (ftx > width ? width - 1 : (ftx < -width ? -width + 1 : ftx));
     ftz = (ftz > height ? height - 1 : (ftz < -height ? -height + 1 : ftz));
@@ -108,16 +108,16 @@ function showCursorInScreen(fingers, coords, container){
 
     cursor.empty();
     if (fingers == 0){
-        cursor.html("<img class=\"indicadores\" src=\"images/nodedo.png\"></img>");
-        cursorRight.html("<img class=\"indicadores\" src=\"images/nodedo.png\"></img>");
+        cursor.html("<img class=\"indicadores\" src=\"images/nodedo.png\"></img><p style='color: #9EACD1'>Deseleccionar</p>");
+        cursorRight.html("<img class=\"indicadores\" src=\"images/nodedo.png\"></img><p style='color: #9EACD1'>Deseleccionar</p>");
     }
     else if(fingers <= 1) {
-        cursor.html("<img class=\"indicadores\" src=\"images/1dedo.png\"></img>");
-        cursorRight.html("<img class=\"indicadores\" src=\"images/1dedo.png\"></img>");
+        cursor.html("<img class=\"indicadores\" src=\"images/1dedo.png\"></img><p style='color: #9EACD1'>Apuntar</p>");
+        cursorRight.html("<img class=\"indicadores\" src=\"images/1dedo.png\"></img><p style='color: #9EACD1'>Apuntar</p>");
     }
     else if(fingers <= 2){
-        cursor.html("<img class=\"indicadores\" src=\"images/2dedos.png\"></img>");
-        cursorRight.html("<img class=\"indicadores\" src=\"images/2dedos.png\"></img>");
+        cursor.html("<img class=\"indicadores\" src=\"images/2dedos.png\"></img><p style='color: #9EACD1'>seleccionar</p>");
+        cursorRight.html("<img class=\"indicadores\" src=\"images/2dedos.png\"></img><p style='color: #9EACD1'>seleccionar</p>");
     }
     else if(fingers <= 3){
         cursor.html("<img class=\"indicadores\" src=\"images/3dedos.png\"></img><p style='color: #9EACD1'>seleccionar</p>");
