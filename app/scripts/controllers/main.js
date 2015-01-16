@@ -57,8 +57,8 @@ angular.module('pruebaApp')
     }
     function init() {
 
-      camera = new THREE.PerspectiveCamera( 8, window.innerWidth / window.innerHeight, 0, 200000 );
-      camera.position.z = 9000;
+      camera = new THREE.PerspectiveCamera( 8, window.innerWidth / window.innerHeight, 0, 400000 );
+      camera.position.z = 10000;
 
       cameraControls = new THREE.LeapBeevaControls(camera);
 
@@ -137,30 +137,6 @@ angular.module('pruebaApp')
     }));
     voiceEngine.addAction(new VoiceAction("detalles", function(){
 
-      addData(selecciones, detalles.length*2, false, detalles, CPS.length);
-      addData(selecciones, detalles.length*2, true, detalles, CPS.length);
-
-      capas(detalles.length*2);
-      capas(detalles.length*2);
-
-      transformar(selecciones, targets.capa, 1000, detalles.length*4);
-
-      window.addEventListener( 'resize', onWindowResize, false );
-    }));
-    voiceEngine.addAction(new VoiceAction("resumen", function(){
-      for (var i=0; i<objIDS.length;i+=1){
-        removeDOM();}
-      $(".elementos").removeClass("selected");
-      window.addEventListener( 'resize', onWindowResize, false );
-    }));
-
-    // -------------------------------------------------------------
-
-
-    var button = document.getElementById( 'fullscreentoggle' );
-    button.addEventListener( 'click', function ( event ) {
-      event.preventDefault();
-
       addData(selecciones, detalles.length*2, false, detalles, CPS.length, "prefijo2");
       addData(selecciones, detalles.length*2, true, detalles, CPS.length, "prefijo2");
 
@@ -168,40 +144,64 @@ angular.module('pruebaApp')
       capas(detalles.length*2);
 
       transformar(selecciones, targets.capa, 1000, detalles.length*4);
-    }, false );
 
-    var button = document.getElementById( 'grouped' );
-    button.addEventListener( 'click', function ( event ) {
-      event.preventDefault();
-      toggleControl(0);
-    }, false );
-    var button = document.getElementById( 'stacked' );
-    button.addEventListener( 'click', function ( event ) {
-      event.preventDefault();
-      toggleControl(1);
-    }, false );
-    var button = document.getElementById( 'ingresos' );
-    button.addEventListener( 'click', function ( event ) {
-      event.preventDefault();
-      toggleData(0);
-    }, false );
-    var button = document.getElementById( 'gastos' );
-    button.addEventListener( 'click', function ( event ) {
-      event.preventDefault();
-      toggleData(1);
-    }, false );
-    var button = document.getElementById( 'tarjetas' );
-    button.addEventListener( 'click', function ( event ) {
-      event.preventDefault();
-      toggleData(2);
-    }, false );
-    var button = document.getElementById( 'resumen' );
-    button.addEventListener( 'click', function ( event ) {
-      event.preventDefault();
+      window.addEventListener( 'resize', onWindowResize, false );
+    }));
+    voiceEngine.addAction(new VoiceAction("principal", function(){
       for (var i=0; i<objIDS.length;i+=1){
-      removeDOM();}
+        removeDOM();}
       $(".elementos").removeClass("selected");
-    }, false );
+
+      window.addEventListener( 'resize', onWindowResize, false );
+    }));
+
+    // -------------------------------------------------------------
+    //
+    //var button = document.getElementById( 'fullscreentoggle' );
+    //button.addEventListener( 'click', function ( event ) {
+    //  event.preventDefault();
+    //
+    //  addData(selecciones, detalles.length*2, false, detalles, CPS.length, "prefijo2");
+    //  addData(selecciones, detalles.length*2, true, detalles, CPS.length, "prefijo2");
+    //
+    //  capas(detalles.length*2);
+    //  capas(detalles.length*2);
+    //
+    //  transformar(selecciones, targets.capa, 1000, detalles.length*4);
+    //}, false );
+    //
+    //var button = document.getElementById( 'grouped' );
+    //button.addEventListener( 'click', function ( event ) {
+    //  event.preventDefault();
+    //  toggleControl(0);
+    //}, false );
+    //var button = document.getElementById( 'stacked' );
+    //button.addEventListener( 'click', function ( event ) {
+    //  event.preventDefault();
+    //  toggleControl(1);
+    //}, false );
+    //var button = document.getElementById( 'ingresos' );
+    //button.addEventListener( 'click', function ( event ) {
+    //  event.preventDefault();
+    //  toggleData(0);
+    //}, false );
+    //var button = document.getElementById( 'gastos' );
+    //button.addEventListener( 'click', function ( event ) {
+    //  event.preventDefault();
+    //  toggleData(1);
+    //}, false );
+    //var button = document.getElementById( 'tarjetas' );
+    //button.addEventListener( 'click', function ( event ) {
+    //  event.preventDefault();
+    //  toggleData(2);
+    //}, false );
+    //var button = document.getElementById( 'resumen' );
+    //button.addEventListener( 'click', function ( event ) {
+    //  event.preventDefault();
+    //  for (var i=0; i<objIDS.length;i+=1){
+    //  removeDOM();}
+    //  $(".elementos").removeClass("selected");
+    //}, false );
 
     function toggleData(data){
       var nodes = $(".nv-legendWrap");
@@ -323,10 +323,7 @@ angular.module('pruebaApp')
               object.castShadow = true;
             if(prefix){object.name = "id"+prefix;
             objIDS.push(object.name);}
-            console.log(objIDS);
-
             scene.add(object);
-
             objeto.push(object);
           }
         }
@@ -451,8 +448,8 @@ angular.module('pruebaApp')
             if(detalles.length<2 && lastId != detalles[0] && lastId != detalles[1] && lastId != detalles[2] && lastId != detalles[3] ) {detalles.push(lastId);
             var elemRight = $(document.elementFromPoint(coords[0] + container.width(),coords[1])).parents(".elementos");
             elem.addClass("selected");
-            elemRight.addClass("selected");console.log(detalles)}
-            else if (lastId == detalles[0] || lastId == detalles[1] || lastId == detalles[2] || lastId == detalles[3]) console.log("iguales");
+            elemRight.addClass("selected");}
+            else if (lastId == detalles[0] || lastId == detalles[1] || lastId == detalles[2] || lastId == detalles[3]);
             else {var elemRight = $(document.elementFromPoint(coords[0] + container.width(),coords[1])).parents(".elementos");
               elem.addClass("canceled");
               elemRight.addClass("canceled");}
@@ -475,8 +472,7 @@ angular.module('pruebaApp')
               elem.removeClass("selected");
               elem.removeClass("canceled");
               elemRight.removeClass("selected");
-              elemRight.removeClass("canceled");
-              console.log(detalles);}
+              elemRight.removeClass("canceled");}
             else {
               var elemRight = $(document.elementFromPoint(coords[0] + container.width(),coords[1])).parents(".elementos");
               elem.removeClass("canceled");
