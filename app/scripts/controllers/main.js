@@ -103,7 +103,7 @@ angular.module('pruebaApp')
 
       scene = new THREE.Scene();
 
-      for(var i = 0; i<12; i += 1){
+      for(var i = 0; i<8; i += 1){
         detalles2.push(CPS[i]._id);
       }
 
@@ -151,7 +151,9 @@ angular.module('pruebaApp')
       for (var i=0; i<objIDS.length;i+=1){
         removeDOM();}
       $(".elementos").removeClass("selected");
-
+      detalles = [];
+      objIDS = [];
+      selecciones = [];
       window.addEventListener( 'resize', onWindowResize, false );
     }));
 
@@ -160,6 +162,8 @@ angular.module('pruebaApp')
     //var button = document.getElementById( 'fullscreentoggle' );
     //button.addEventListener( 'click', function ( event ) {
     //  event.preventDefault();
+    //
+    //  detalles = ["28001","28028"];
     //
     //  addData(selecciones, detalles.length*2, false, detalles, CPS.length, "prefijo2");
     //  addData(selecciones, detalles.length*2, true, detalles, CPS.length, "prefijo2");
@@ -201,12 +205,15 @@ angular.module('pruebaApp')
     //  for (var i=0; i<objIDS.length;i+=1){
     //  removeDOM();}
     //  $(".elementos").removeClass("selected");
+    //  detalles = [];
+    //  objIDS = [];
+    //  selecciones = [];
     //}, false );
 
     function toggleData(data){
       var nodes = $(".nv-legendWrap");
 
-      var offset = 24;
+      var offset = 16;
       var objects = (nodes.length - offset)/2;
 
       for(var i = nodes.length/ 2 - objects; i < nodes.length/ 2; i ++){
@@ -221,7 +228,7 @@ angular.module('pruebaApp')
     function toggleControl(data){
       var nodes = $(".nv-controlsWrap");
 
-      var offset = 24;
+      var offset = 16;
       var objects = (nodes.length - offset)/2;
 
       for(var i = nodes.length/ 2 - objects; i < nodes.length/ 2; i ++){
@@ -325,6 +332,7 @@ angular.module('pruebaApp')
             objIDS.push(object.name);}
             scene.add(object);
             objeto.push(object);
+            if(objIDS) console.log(objIDS);
           }
         }
       }
@@ -346,9 +354,9 @@ angular.module('pruebaApp')
 
         var object = new THREE.Object3D();
 
-        object.position.x = 4600 * Math.cos(phi+0.4);
+        object.position.x = 4600 * Math.cos(phi+0.8);
         object.position.y = 0;
-        object.position.z = 4600 * Math.sin(phi+0.4);//100 * (Math.pow((CPS[i].año - 2010),4))
+        object.position.z = 4600 * Math.sin(phi+0.8);//100 * (Math.pow((CPS[i].año - 2010),4))
 
         vector.x = object.position.x * -2;
         vector.y = object.position.y;
@@ -383,13 +391,6 @@ angular.module('pruebaApp')
         object.lookAt(vector);
 
         targets.capa.push(object);
-
-        //var phi = 0.2 + Math.PI;
-
-        //camera.position.z = 18000;
-        //camera.position.y = -6000;
-
-        //camera.lookAt(vector);
       }
     }
     function transformar(origin, targets, duration, num) {
