@@ -41,16 +41,18 @@ function transformOld(tipPosition, w, h) {
 
 function transform(tipPosition, w, h) {
     var width = 150;
-    var height = 150;
+    var height = 100;
     // Inverse Axis for HMD
     var ftx = -tipPosition[0];
     var ftz = tipPosition[2];
+    console.log(ftz);
     ftx = (ftx > width ? width - 1 : (ftx < -width ? -width + 1 : ftx));
     ftz = (ftz > height ? height - 1 : (ftz < -height ? -height + 1 : ftz));
     var x = THREE.Math.mapLinear(ftx, -width, width, 0, w);
-    var z = THREE.Math.mapLinear(ftz, -height, height, 0, h);
+    var z = THREE.Math.mapLinear(ftz, -50, 150 , 0, h );
     return [x, z];
 }
+
 
 function getFingers(frame){
     var fls = 0;
