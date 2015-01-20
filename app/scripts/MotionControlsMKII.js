@@ -43,8 +43,9 @@ THREE.MotionControls = function ( object3D ) {
 			];
 
 
-			for( var i = 0; i < 3; ++i )
+			for( var i = 0; i < 3; ++i ){
 				rotation[i] = ( rotation[scope.anglesOrder[i]]) * scope.DEG2RAD;
+			}
 			
 			scope.orientation.set( rotation[0], rotation[1], rotation[2] );
 		}

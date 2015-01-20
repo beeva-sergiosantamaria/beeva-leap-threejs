@@ -49,7 +49,7 @@ angular.module('pruebaApp')
       requestAnimationFrame( animate );
       cameraControls.update(leapController.frame());
       if(controls) controls.update();
-      if(deviceControls)
+      if(false)
         deviceControls.update();
       leapEvents(leapController.frame());
       TWEEN.update();
@@ -58,13 +58,13 @@ angular.module('pruebaApp')
     function init() {
 
       camera = new THREE.PerspectiveCamera( 8, window.innerWidth / window.innerHeight, 0, 400000 );
-      camera.position.z = 10000;
+      camera.position.z = 12000;
 
       cameraControls = new THREE.LeapBeevaControls(camera);
 
       if (window.DeviceOrientationEvent && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         console.error("Oriented device");
-        deviceControls = new THREE.DeviceOrientationControls(camera);
+        deviceControls = new DeviceOrientationController(camera);
         deviceControls.connect();
 
         document.onclick = function(){
@@ -72,16 +72,16 @@ angular.module('pruebaApp')
         };
       }
       else {
-        controls = new THREE.TrackballControls( camera );
-
-        controls.zoomSpeed = 10;
-        controls.panSpeed = 0.2;
-        controls.staticMoving = true;
-        controls.minDistance = 0;
-        controls.maxDistance = Infinity;
-
-        controls.addEventListener( 'change', render );
       }
+      controls = new THREE.TrackballControls( camera );
+
+      controls.zoomSpeed = 10;
+      controls.panSpeed = 0.2;
+      controls.staticMoving = true;
+      controls.minDistance = 0;
+      controls.maxDistance = Infinity;
+
+      controls.addEventListener( 'change', render );
       renderer = new THREE.CSS3DRenderer({});
       renderer.setSize( window.innerWidth, window.innerHeight );
       renderer.domElement.style.position = 'relative';
@@ -428,7 +428,9 @@ angular.module('pruebaApp')
       var coordsTip = getCoordinatesFromTip(frame, container);
 
       // Mostrar el cursor/dedos/mano en pantalla, o no...
-      showCursorInScreen(fingers, coords, container);
+      if(fingers == 1)
+        showCursorInScreen(fingers, coordsTip, container);
+      else showCursorInScreen(fingers, coords, container);
 
       if(coords[0] > 0){
         checkIntersections(fingers, coords, container);
