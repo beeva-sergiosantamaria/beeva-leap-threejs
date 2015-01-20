@@ -30,7 +30,7 @@ angular.module('pruebaApp')
       });
     };
 
-    voiceEngine.start();
+    //voiceEngine.start();
 
     init();
 
@@ -60,10 +60,10 @@ angular.module('pruebaApp')
       camera = new THREE.PerspectiveCamera( 8, window.innerWidth / window.innerHeight, 0, 400000 );
       camera.position.z = 10000;
 
+
       cameraControls = new THREE.LeapBeevaControls(camera);
 
       if (window.DeviceOrientationEvent && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        console.error("Oriented device");
         deviceControls = new THREE.DeviceOrientationControls(camera);
         deviceControls.connect();
 
@@ -72,14 +72,15 @@ angular.module('pruebaApp')
         };
       }
       else {
-        controls = new THREE.TrackballControls( camera );
+        controls = new THREE.OrbitControls( camera );
 
         controls.zoomSpeed = 10;
         controls.panSpeed = 0.2;
         controls.staticMoving = true;
         controls.minDistance = 0;
         controls.maxDistance = Infinity;
-
+        controls.minPolarAngle = Math.PI/2; // radians
+        controls.maxPolarAngle = Math.PI/2; // radians
         controls.addEventListener( 'change', render );
       }
       renderer = new THREE.CSS3DRenderer({});
@@ -387,6 +388,8 @@ angular.module('pruebaApp')
         vector.x = object.position.x;
         vector.y = object.position.y;
         vector.z = object.position.z;
+
+        console.log(object);
 
         object.lookAt(vector);
 

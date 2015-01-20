@@ -184,6 +184,7 @@ THREE.TrackballControls = function ( object, domElement ) {
     return function () {
 
       var angle = Math.acos( _rotateStart.dot( _rotateEnd ) / _rotateStart.length() / _rotateEnd.length() );
+      console.log(angle);
 
       if ( angle ) {
 

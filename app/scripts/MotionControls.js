@@ -12,7 +12,7 @@ THREE.MotionControls = function ( object3D ) {
     this.object3D = object3D;
     this.object3D.rotation.order = "YXZ";
     this.orientation = new THREE.Euler( 0, 0, 0 );
-    this.DEG2RAD = Math.PI / 180;
+    this.DEG2RAD = Math.PI / 10;
     this.anglesOrder = [];
     this.anglesOffset = [];
     this.anglesCoef = [];
@@ -30,9 +30,12 @@ THREE.MotionControls = function ( object3D ) {
 
             for( var i = 0; i < 3; ++i )
                 rotation[i] = ( rotation[scope.anglesOrder[i]] * scope.anglesCoef[i] + scope.anglesOffset[i] ) * scope.DEG2RAD;
+          console.log(rotation[i]);
 
             scope.orientation.set( rotation[0], rotation[1], rotation[2] );
         }
+
+      console.log(rotation);
     };
 
     this.onOrientationChange = function( event ) {
