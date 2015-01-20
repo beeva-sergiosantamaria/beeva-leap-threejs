@@ -61,9 +61,7 @@ VoiceEngine = function(){
               // Listen for errors
               this.recognizer.onerror = function (event) {
                   console.error('Recognition error: ' + event.message);
-                  setTimeout(function(){
-                      self.start();
-                  }, 250);
+                  self.start();
               };
 
               console.log(this.recognizer);

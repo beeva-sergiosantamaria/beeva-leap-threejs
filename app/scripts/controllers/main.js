@@ -49,7 +49,7 @@ angular.module('pruebaApp')
       requestAnimationFrame( animate );
       cameraControls.update(leapController.frame());
       if(controls) controls.update();
-      if(false)
+      if(deviceControls)
         deviceControls.update();
       leapEvents(leapController.frame());
       TWEEN.update();
@@ -70,8 +70,6 @@ angular.module('pruebaApp')
         document.onclick = function(){
           toggleFullscreen();
         };
-      }
-      else {
       }
       controls = new THREE.TrackballControls( camera );
 
