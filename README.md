@@ -1,4 +1,2 @@
-beeva-leap-threejs
-==================
-
-pruebas leap con threejs
+# visualization3D
+visualizacion de datos en mapa 3d dinamico
